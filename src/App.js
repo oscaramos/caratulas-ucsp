@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { fetchGenerateCover } from './api';
+
+const data = {
+  career: 'Computer Science',
+  course: 'Microprocessors',
+  work: 'Real final job',
+  gender: 'M',
+  names: ['Oscar Daniel Ramos Ramirez'],
+  semester: 'VIII Semester',
+  year: '1999',
+}
 
 function App() {
+  const [url, setUrl] = useState('');
+
+  const generateCover = () => {
+    fetchGenerateCover(data)
+      .then(pdfUrl => {
+        console.log(pdfUrl);
+        setUrl(pdfUrl);
+      })
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <button onClick={generateCover}>Holo</button>
+      <br />
+      Link a pdf=<a href={url}>{url}</a>
     </div>
-  );
+  )
+    ;
 }
 
 export default App;
