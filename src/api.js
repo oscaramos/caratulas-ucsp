@@ -1,6 +1,6 @@
-export const fetchGenerateCover = (data) => {
-  const url = 'http://localhost:4000/';
+const url = process.env.NODE_ENV.includes('development') ? 'http://localhost:4000/' : 'https://caratulas-ucsp-api.herokuapp.com/';
 
+export const fetchGenerateCover = (data) => {
   const options = {
     method: 'POST',
     body: JSON.stringify(data),
