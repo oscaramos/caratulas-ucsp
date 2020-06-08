@@ -64,7 +64,7 @@ const useStyles = makeStyles(theme => ({
     width: "80%"
   },
   radioContainer: {
-    width: "78%"
+    width: "80%"
   }
 }));
 
@@ -81,24 +81,27 @@ const TextFieldView = ({ classes, data, handleTextInput, name }) =>
   </Grid>;
 
 const RadiosView = ({ classes, data, field, handleRadioChange }) => (
-  <FormControl component='fieldset' key={field} className={classes.radioContainer}>
-    <FormLabel component='legend'>{data[field].label}</FormLabel>
-    <RadioGroup row aria-label={data[field].label} value={data[field].value} onChange={handleRadioChange}>
-      {
-        Object.keys(data[field].radio).map(key => (
-          <FormControlLabel
-            key={key}
-            name={field}
-            value={key}
-            control={
-              <Radio color='primary' />
-            }
-            label={data[field].radio[key]}
-          />
-        ))
-      }
-    </RadioGroup>
-  </FormControl>
+  <Grid item className={classes.radioContainer}>
+    <FormControl component='fieldset' key={field}>
+      <FormLabel component='legend'>{data[field].label}</FormLabel>
+      <RadioGroup row aria-label={data[field].label} value={data[field].value} onChange={handleRadioChange}>
+        {
+          Object.keys(data[field].radio).map(key => (
+            <FormControlLabel
+              key={key}
+              name={field}
+              value={key}
+              control={
+                <Radio color='primary' />
+              }
+              label={data[field].radio[key]}
+            />
+          ))
+        }
+      </RadioGroup>
+    </FormControl>
+  </Grid>
+
 )
 
 function App() {
