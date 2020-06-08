@@ -12,7 +12,6 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormLabel from "@material-ui/core/FormLabel";
 import FormControl from "@material-ui/core/FormControl";
-import * as PropTypes from "prop-types";
 
 const debug = false;
 
@@ -63,11 +62,26 @@ const useStyles = makeStyles(theme => ({
   },
   textContainer: {
     width: "80%"
+  },
+  radioContainer: {
+    width: "78%"
   }
 }));
 
-const RadiosView = ({ data, field, handleRadioChange }) => (
-  <FormControl component='fieldset' key={field}>
+const TextFieldView = ({ classes, data, handleTextInput, name }) =>
+  <Grid item className={classes.textContainer}>
+    <TextField
+      variant='outlined'
+      name={name}
+      value={data[name].value}
+      label={data[name].label}
+      onChange={handleTextInput}
+      fullWidth
+    />
+  </Grid>;
+
+const RadiosView = ({ classes, data, field, handleRadioChange }) => (
+  <FormControl component='fieldset' key={field} className={classes.radioContainer}>
     <FormLabel component='legend'>{data[field].label}</FormLabel>
     <RadioGroup row aria-label={data[field].label} value={data[field].value} onChange={handleRadioChange}>
       {
@@ -86,19 +100,6 @@ const RadiosView = ({ data, field, handleRadioChange }) => (
     </RadioGroup>
   </FormControl>
 )
-
-const TextFieldView = props =>
-  <Grid item className={props.classes.textContainer}>
-    <TextField
-      variant='outlined'
-
-      name={props.name}
-      value={props.data[props.name].value}
-      label={props.data[props.name].label}
-      onChange={props.onChange}
-      fullWidth
-    />
-  </Grid>;
 
 function App() {
   const classes = useStyles();
@@ -147,22 +148,18 @@ function App() {
           </Grid>
           {Object.keys(data).map(field =>
             (
-              <React.Fragment>
+              <React.Fragment key={field}>
                 {
                   data[field].radio ?
-                    <RadiosView key={field} field={field} data={data} handleRadioChange={handleRadioChange} />
+                    <RadiosView key={field} classes={classes} field={field} data={data} handleRadioChange={handleRadioChange} />
                     :
-                    <TextFieldView key={field} classes={classes} name={field} data={data} onChange={handleTextInput} />
+                    <TextFieldView key={field} classes={classes} name={field} data={data} handleTextInput={handleTextInput} />
                 }
               </React.Fragment>
             )
           )}
           <Grid item>
-            <Button
-              variant='contained'
-              color='primary'
-              onClick={() => generateCover()}
-            >
+            <Button variant='contained' color='primary' onClick={() => generateCover()}>
               Generar Caratula
             </Button>
           </Grid>
