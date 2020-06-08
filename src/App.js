@@ -7,6 +7,12 @@ import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormControl from "@material-ui/core/FormControl";
+import * as PropTypes from "prop-types";
 
 const debug = false;
 
@@ -23,14 +29,6 @@ const defaultData = {
     value: debug ? "Real final job" : "",
     label: "Nombre del trabajo"
   },
-  gender: {
-    value: debug ? "M" : "",
-    label: "Género"
-  },
-  names: {
-    value: debug ? ["Oscar Daniel Ramos Ramirez"] : [""],
-    label: "Integrantes"
-  },
   semester: {
     value: debug ? "VIII Semester" : "",
     label: "Semestre"
@@ -38,6 +36,15 @@ const defaultData = {
   year: {
     value: debug ? "1999" : "",
     label: "Año"
+  },
+  gender: {
+    value: debug ? "M" : "M",
+    radio: { "M": "Masculino", "F": "Femenino" },
+    label: "Género"
+  },
+  names: {
+    value: debug ? ["Oscar Daniel Ramos Ramirez"] : [""],
+    label: "Integrantes"
   }
 };
 
@@ -59,6 +66,40 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const RadiosView = ({ data, field, handleRadioChange }) => (
+  <FormControl component='fieldset' key={field}>
+    <FormLabel component='legend'>{data[field].label}</FormLabel>
+    <RadioGroup row aria-label={data[field].label} value={data[field].value} onChange={handleRadioChange}>
+      {
+        Object.keys(data[field].radio).map(key => (
+          <FormControlLabel
+            key={key}
+            name={field}
+            value={key}
+            control={
+              <Radio color='primary' />
+            }
+            label={data[field].radio[key]}
+          />
+        ))
+      }
+    </RadioGroup>
+  </FormControl>
+)
+
+const TextFieldView = props =>
+  <Grid item className={props.classes.textContainer}>
+    <TextField
+      variant='outlined'
+
+      name={props.name}
+      value={props.data[props.name].value}
+      label={props.data[props.name].label}
+      onChange={props.onChange}
+      fullWidth
+    />
+  </Grid>;
+
 function App() {
   const classes = useStyles();
   const [url, setUrl] = useState("Aquí aparecerá un link");
@@ -77,41 +118,49 @@ function App() {
   };
 
   const handleTextInput = event => {
-    setData({ ...data, [event.target.name]: event.target.value });
+    const field = event.target.name;
+    const value = event.target.value;
+    setData({ ...data, [field]: { ...data[field], value } });
+  };
+
+  const handleRadioChange = event => {
+    const field = event.target.name;
+    const value = event.target.value;
+    setData({ ...data, [field]: { ...data[field], value } })
   };
 
   return (
-    <Container maxWidth="xs" className={classes.root}>
+    <Container maxWidth='xs' className={classes.root}>
       <Paper>
         <Grid
           container
           spacing={1}
-          direction="column"
-          alignItems="center"
+          direction='column'
+          alignItems='center'
           className={classes.form}
-          component="form"
+          component='form'
           noValidate
-          autoComplete="off"
+          autoComplete='off'
         >
           <Grid item>
-            <Typography variant="h5">Carátulas UCSP</Typography>
+            <Typography variant='h5'>Carátulas UCSP</Typography>
           </Grid>
-          {Object.keys(data).map(field => (
-            <Grid item key={field} className={classes.textContainer}>
-              <TextField
-                key={field}
-                name={field}
-                label={data[field].label}
-                defaultValue={data[field].value}
-                onChange={handleTextInput}
-                fullWidth
-              />
-            </Grid>
-          ))}
+          {Object.keys(data).map(field =>
+            (
+              <React.Fragment>
+                {
+                  data[field].radio ?
+                    <RadiosView key={field} field={field} data={data} handleRadioChange={handleRadioChange} />
+                    :
+                    <TextFieldView key={field} classes={classes} name={field} data={data} onChange={handleTextInput} />
+                }
+              </React.Fragment>
+            )
+          )}
           <Grid item>
             <Button
-              variant="contained"
-              color="primary"
+              variant='contained'
+              color='primary'
               onClick={() => generateCover()}
             >
               Generar Caratula
