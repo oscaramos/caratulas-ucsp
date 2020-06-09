@@ -76,15 +76,15 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const TextFieldView = ({ classes, data, handleTextInput, name, additionalGridClassName, additionalTextClassname }) =>
+const TextFieldView = ({ name, data, handleTextInput, ...otherprops }) =>
   <TextField
-    className={additionalTextClassname}
     variant='outlined'
     name={name}
     value={data[name].value}
     label={data[name].label}
     onChange={handleTextInput}
     fullWidth
+    {...otherprops}
   />;
 
 const RadiosView = ({ classes, data, field, handleRadioChange }) => (
@@ -137,6 +137,27 @@ function App() {
     setData({ ...data, [field]: { ...data[field], value } })
   };
 
+  const handleNamesInput = index => event => {
+    const changeNameFromData = (value) => {
+      const newValues = [...value];
+      newValues[index] = event.target.value;
+      return newValues;
+    }
+
+    setData({ ...data, names: { ...data.names, value: changeNameFromData(data.names.value) } });
+  }
+
+  const addName = () => {
+    setData({...data, names: {...data.names, value: [...data.names.value, ""]}})
+  }
+
+  const removeName = indexToRemove => () => {
+    const removeNameFromData = value => value.filter((x, idx) => idx !== indexToRemove)
+
+    setData({...data, names: {...data.names, value: removeNameFromData(data.names.value) } })
+  }
+
+
   return (
     <Container maxWidth='xs' className={classes.root}>
       <Paper>
@@ -153,46 +174,59 @@ function App() {
           <Grid item>
             <Typography variant='h5'>Carátulas UCSP</Typography>
           </Grid>
-          {Object.keys(data).map(field => {
+          {Object.keys(data).map((field) => {
               if (field === 'names') {
                 return (
-                  <Grid item className={classes.itemContainer}>
-                    <TextFieldView classes={classes} additionalTextClassname={classes.nameInput}
-                                   key={field} name={field} data={data} handleTextInput={handleTextInput} />
-                    <IconButton aria-label='add name' style={{paddingTop: "0.6em"}}>
-                       <AddIcon />
-                    </IconButton>
+                  <Grid item key={field} className={classes.itemContainer}>
+                    {
+                      data[field].value.map((name, idx) =>
+                      <React.Fragment key={name+idx}>
+                        <TextFieldView className={classes.nameInput} key={field} name={field} value={name}
+                                       data={data} handleTextInput={handleNamesInput(idx)} />
+                        {
+                          (idx === data[field].value.length - 1 ?
+                          <IconButton aria-label='add name' style={{paddingTop: "0.65em"}} onClick={addName}>
+                            <AddIcon />
+                          </IconButton>
+                          :
+                          <IconButton aria-label='remove name' style={{paddingTop: "0.65em"}} onClick={removeName(idx)}>
+                            <RemoveIcon />
+                          </IconButton>)
+                        }
+                      </React.Fragment>
+                      )
+                    }
                   </Grid>
                 )
               } else if (field === 'semester') {
                 return (
-                  <Grid item className={classes.itemContainer}>
+                  <Grid item key={field} className={classes.itemContainer}>
                     <Grid container spacing={1} direction='row'>
-                      <Grid item className={[classes.itemContainer, classes.shortInput]}>
-                        <TextFieldView classes={classes} key='semester' name='semester' data={data}
-                                       handleTextInput={handleTextInput} />
+                      <Grid item className={classes.shortInput}>
+                        <TextFieldView key='semester' name='semester' value={data[field].value}
+                                       data={data} handleTextInput={handleTextInput} />
                       </Grid>
-                      <Grid item className={[classes.itemContainer, classes.shortInput]}>
-                        <TextFieldView classes={classes} key='year' name='year' data={data}
-                                       handleTextInput={handleTextInput} />
+                      <Grid item className={classes.shortInput}>
+                        <TextFieldView key='year' name='year' value={data[field].value}
+                                       data={data} handleTextInput={handleTextInput} />
                       </Grid>
                     </Grid>
                   </Grid>
                 )
               } else if (field === 'year') {
-                return <React.Fragment />
+                return <React.Fragment key={field}/>
               } else if (data[field].radio) {
                 return (
-                  <Grid item className={classes.itemContainer}>
-                    <RadiosView classes={classes} key={field} field={field} data={data}
-                                handleRadioChange={handleRadioChange} />
+                  <Grid item key={field} className={classes.itemContainer}>
+                    <RadiosView classes={classes} key={field} field={field}
+                                data={data} handleRadioChange={handleRadioChange} />
                   </Grid>
                 )
               } else {
                 return (
-                  <Grid item className={classes.itemContainer}>
-                    <TextFieldView classes={classes} key={field} name={field} data={data}
-                                   handleTextInput={handleTextInput} />
+                  <Grid item key={field} className={classes.itemContainer}>
+                    <TextFieldView key={field} name={field} value={data[field].value}
+                                   data={data} handleTextInput={handleTextInput} />
                   </Grid>
                 )
               }
