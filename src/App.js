@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { fetchGenerateCover } from "./api";
+
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
@@ -12,6 +13,9 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormLabel from "@material-ui/core/FormLabel";
 import FormControl from "@material-ui/core/FormControl";
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
+import IconButton from "@material-ui/core/IconButton";
 
 const debug = false;
 
@@ -60,48 +64,48 @@ const useStyles = makeStyles(theme => ({
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2)
   },
-  textContainer: {
+  itemContainer: {
     width: "80%"
   },
-  radioContainer: {
-    width: "80%"
+  shortInput: {
+    width: "50%",
+    display: "inline"
+  },
+  nameInput: {
+    width: "80%",
   }
 }));
 
-const TextFieldView = ({ classes, data, handleTextInput, name }) =>
-  <Grid item className={classes.textContainer}>
-    <TextField
-      variant='outlined'
-      name={name}
-      value={data[name].value}
-      label={data[name].label}
-      onChange={handleTextInput}
-      fullWidth
-    />
-  </Grid>;
+const TextFieldView = ({ classes, data, handleTextInput, name, additionalGridClassName, additionalTextClassname }) =>
+  <TextField
+    className={additionalTextClassname}
+    variant='outlined'
+    name={name}
+    value={data[name].value}
+    label={data[name].label}
+    onChange={handleTextInput}
+    fullWidth
+  />;
 
 const RadiosView = ({ classes, data, field, handleRadioChange }) => (
-  <Grid item className={classes.radioContainer}>
-    <FormControl component='fieldset' key={field}>
-      <FormLabel component='legend'>{data[field].label}</FormLabel>
-      <RadioGroup row aria-label={data[field].label} value={data[field].value} onChange={handleRadioChange}>
-        {
-          Object.keys(data[field].radio).map(key => (
-            <FormControlLabel
-              key={key}
-              name={field}
-              value={key}
-              control={
-                <Radio color='primary' />
-              }
-              label={data[field].radio[key]}
-            />
-          ))
-        }
-      </RadioGroup>
-    </FormControl>
-  </Grid>
-
+  <FormControl component='fieldset' key={field}>
+    <FormLabel component='legend'>{data[field].label}</FormLabel>
+    <RadioGroup row aria-label={data[field].label} value={data[field].value} onChange={handleRadioChange}>
+      {
+        Object.keys(data[field].radio).map(key => (
+          <FormControlLabel
+            key={key}
+            name={field}
+            value={key}
+            control={
+              <Radio color='primary' />
+            }
+            label={data[field].radio[key]}
+          />
+        ))
+      }
+    </RadioGroup>
+  </FormControl>
 )
 
 function App() {
@@ -138,7 +142,7 @@ function App() {
       <Paper>
         <Grid
           container
-          spacing={1}
+          spacing={2}
           direction='column'
           alignItems='center'
           className={classes.form}
@@ -149,17 +153,50 @@ function App() {
           <Grid item>
             <Typography variant='h5'>Carátulas UCSP</Typography>
           </Grid>
-          {Object.keys(data).map(field =>
-            (
-              <React.Fragment key={field}>
-                {
-                  data[field].radio ?
-                    <RadiosView key={field} classes={classes} field={field} data={data} handleRadioChange={handleRadioChange} />
-                    :
-                    <TextFieldView key={field} classes={classes} name={field} data={data} handleTextInput={handleTextInput} />
-                }
-              </React.Fragment>
-            )
+          {Object.keys(data).map(field => {
+              if (field === 'names') {
+                return (
+                  <Grid item className={classes.itemContainer}>
+                    <TextFieldView classes={classes} additionalTextClassname={classes.nameInput}
+                                   key={field} name={field} data={data} handleTextInput={handleTextInput} />
+                    <IconButton aria-label='add name' style={{paddingTop: "0.6em"}}>
+                       <AddIcon />
+                    </IconButton>
+                  </Grid>
+                )
+              } else if (field === 'semester') {
+                return (
+                  <Grid item className={classes.itemContainer}>
+                    <Grid container spacing={1} direction='row'>
+                      <Grid item className={[classes.itemContainer, classes.shortInput]}>
+                        <TextFieldView classes={classes} key='semester' name='semester' data={data}
+                                       handleTextInput={handleTextInput} />
+                      </Grid>
+                      <Grid item className={[classes.itemContainer, classes.shortInput]}>
+                        <TextFieldView classes={classes} key='year' name='year' data={data}
+                                       handleTextInput={handleTextInput} />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                )
+              } else if (field === 'year') {
+                return <React.Fragment />
+              } else if (data[field].radio) {
+                return (
+                  <Grid item className={classes.itemContainer}>
+                    <RadiosView classes={classes} key={field} field={field} data={data}
+                                handleRadioChange={handleRadioChange} />
+                  </Grid>
+                )
+              } else {
+                return (
+                  <Grid item className={classes.itemContainer}>
+                    <TextFieldView classes={classes} key={field} name={field} data={data}
+                                   handleTextInput={handleTextInput} />
+                  </Grid>
+                )
+              }
+            }
           )}
           <Grid item>
             <Button variant='contained' color='primary' onClick={() => generateCover()}>
