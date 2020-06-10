@@ -72,22 +72,21 @@ const useStyles = makeStyles(theme => ({
     display: "inline"
   },
   nameInput: {
-    width: "80%",
+    width: "85%",
+  },
+  iconContainer: {
+    paddingTop: "0.65em"
   }
 }));
 
-const TextFieldView = ({ name, data, handleTextInput, ...otherprops }) =>
+const TextFieldView = ({ ...otherprops }) =>
   <TextField
     variant='outlined'
-    name={name}
-    value={data[name].value}
-    label={data[name].label}
-    onChange={handleTextInput}
     fullWidth
     {...otherprops}
   />;
 
-const RadiosView = ({ classes, data, field, handleRadioChange }) => (
+const RadiosView = ({ data, field, handleRadioChange }) => (
   <FormControl component='fieldset' key={field}>
     <FormLabel component='legend'>{data[field].label}</FormLabel>
     <RadioGroup row aria-label={data[field].label} value={data[field].value} onChange={handleRadioChange}>
@@ -97,9 +96,7 @@ const RadiosView = ({ classes, data, field, handleRadioChange }) => (
             key={key}
             name={field}
             value={key}
-            control={
-              <Radio color='primary' />
-            }
+            control={<Radio color='primary' />}
             label={data[field].radio[key]}
           />
         ))
@@ -161,16 +158,8 @@ function App() {
   return (
     <Container maxWidth='xs' className={classes.root}>
       <Paper>
-        <Grid
-          container
-          spacing={2}
-          direction='column'
-          alignItems='center'
-          className={classes.form}
-          component='form'
-          noValidate
-          autoComplete='off'
-        >
+        <Grid container spacing={2} direction='column' alignItems='center'
+          className={classes.form} component='form' noValidate autoComplete='off'>
           <Grid item>
             <Typography variant='h5'>Carátulas UCSP</Typography>
           </Grid>
@@ -178,19 +167,21 @@ function App() {
               if (field === 'names') {
                 return (
                   <Grid item key={field} className={classes.itemContainer}>
+                    <FormLabel component='legend'>Integrantes</FormLabel>
                     {
                       data[field].value.map((name, idx) =>
-                      <React.Fragment key={name+idx}>
+                      <React.Fragment key={idx}>
+                        <div style={{marginTop: "0.5em"}}/>
                         <TextFieldView className={classes.nameInput} key={field} name={field} value={name}
-                                       data={data} handleTextInput={handleNamesInput(idx)} />
+                                       onChange={handleNamesInput(idx)} />
                         {
                           (idx === data[field].value.length - 1 ?
-                          <IconButton aria-label='add name' style={{paddingTop: "0.65em"}} onClick={addName}>
-                            <AddIcon />
+                          <IconButton aria-label='add name' className={classes.iconContainer} onClick={addName}>
+                            <AddIcon fontSize="small" />
                           </IconButton>
                           :
-                          <IconButton aria-label='remove name' style={{paddingTop: "0.65em"}} onClick={removeName(idx)}>
-                            <RemoveIcon />
+                          <IconButton aria-label='remove name' className={classes.iconContainer} onClick={removeName(idx)}>
+                            <RemoveIcon fontSize="small" />
                           </IconButton>)
                         }
                       </React.Fragment>
@@ -203,12 +194,12 @@ function App() {
                   <Grid item key={field} className={classes.itemContainer}>
                     <Grid container spacing={1} direction='row'>
                       <Grid item className={classes.shortInput}>
-                        <TextFieldView key='semester' name='semester' value={data[field].value}
-                                       data={data} handleTextInput={handleTextInput} />
+                        <TextFieldView key='semester' name='semester' value={data[field].value} label={data[field].label}
+                                       onChange={handleTextInput} />
                       </Grid>
                       <Grid item className={classes.shortInput}>
-                        <TextFieldView key='year' name='year' value={data[field].value}
-                                       data={data} handleTextInput={handleTextInput} />
+                        <TextFieldView key='year' name='year' value={data['year'].value} label={data['year'].label}
+                                       onChange={handleTextInput} />
                       </Grid>
                     </Grid>
                   </Grid>
@@ -218,15 +209,15 @@ function App() {
               } else if (data[field].radio) {
                 return (
                   <Grid item key={field} className={classes.itemContainer}>
-                    <RadiosView classes={classes} key={field} field={field}
+                    <RadiosView classes={classes} key={field} field={field} label={data[field].label}
                                 data={data} handleRadioChange={handleRadioChange} />
                   </Grid>
                 )
               } else {
                 return (
                   <Grid item key={field} className={classes.itemContainer}>
-                    <TextFieldView key={field} name={field} value={data[field].value}
-                                   data={data} handleTextInput={handleTextInput} />
+                    <TextFieldView key={field} name={field} value={data[field].value} label={data[field].label}
+                                   onChange={handleTextInput} />
                   </Grid>
                 )
               }
