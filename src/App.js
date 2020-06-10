@@ -170,80 +170,63 @@ function App() {
           <Grid item>
             <Typography variant='h5'>Carátulas UCSP</Typography>
           </Grid>
-          {Object.keys(data).map((field) => {
-              if(field === 'career') {
-                return (
-                <Grid item key={field} className={classes.itemContainer}>
-                  <Autocomplete
-                    options={data['career'].options}
-                    value={data['career'].value}
-                    onInputChange={(event, value) => handleDataChange('career', value)}
-                    renderInput={(params) =>
-                      <TextField {...params} label={data['career'].label} variant="outlined" />
-                    }
-                  />
-                </Grid>
-                )
+          <Grid item className={classes.itemContainer}>
+            <Autocomplete
+              options={data['career'].options}
+              value={data['career'].value}
+              onInputChange={(event, value) => handleDataChange('career', value)}
+              renderInput={(params) =>
+                <TextField {...params} label={data['career'].label} variant="outlined" />
               }
-              else if (field === 'names') {
-                return (
-                  <Grid item key={field} className={classes.itemContainer}>
-                    <FormLabel component='legend'>Integrantes</FormLabel>
-                    {
-                      data[field].value.map((name, idx) =>
-                      <React.Fragment key={idx}>
-                        <div style={{marginTop: "0.5em"}}/>
-                        <TextFieldView className={classes.nameInput} key={field} name={field} value={name}
-                                       onChange={handleNamesInput(idx)} />
-                        {
-                          (idx === data[field].value.length - 1 ?
-                          <IconButton aria-label='add name' className={classes.iconContainer} onClick={addName}>
-                            <AddIcon fontSize="small" />
-                          </IconButton>
-                          :
-                          <IconButton aria-label='remove name' className={classes.iconContainer} onClick={removeName(idx)}>
-                            <RemoveIcon fontSize="small" />
-                          </IconButton>)
-                        }
-                      </React.Fragment>
-                      )
-                    }
-                  </Grid>
-                )
-              } else if (field === 'semester') {
-                return (
-                  <Grid item key={field} className={classes.itemContainer}>
-                    <Grid container spacing={1} direction='row'>
-                      <Grid item className={classes.shortInput}>
-                        <TextFieldView key='semester' name='semester' value={data[field].value} label={data[field].label}
-                                       onChange={(event) => handleDataChange('semester', event.target.value)} />
-                      </Grid>
-                      <Grid item className={classes.shortInput}>
-                        <TextFieldView key='year' name='year' value={data['year'].value} label={data['year'].label}
-                                       onChange={(event) => handleDataChange('year', event.target.value)} />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                )
-              } else if (field === 'year') {
-                return <React.Fragment key={field}/>
-              } else if (data[field].radio) {
-                return (
-                  <Grid item key={field} className={classes.itemContainer}>
-                    <RadiosView classes={classes} key={field} field={field} label={data[field].label}
-                                data={data} handleRadioChange={(event) => handleDataChange(field, event.target.value)} />
-                  </Grid>
-                )
-              } else {
-                return (
-                  <Grid item key={field} className={classes.itemContainer}>
-                    <TextFieldView key={field} name={field} value={data[field].value} label={data[field].label}
-                                   onChange={(event) => handleDataChange(field, event.target.value)} />
-                  </Grid>
-                )
-              }
+            />
+          </Grid>
+          <Grid item className={classes.itemContainer}>
+            <TextFieldView name='course' value={data['course'].value} label={data['course'].label}
+                           onChange={(event) => handleDataChange('course', event.target.value)} />
+          </Grid>
+          <Grid item className={classes.itemContainer}>
+            <TextFieldView name='work' value={data['work'].value} label={data['work'].label}
+                           onChange={(event) => handleDataChange('work', event.target.value)} />
+          </Grid>
+          <Grid item className={classes.itemContainer}>
+            <Grid container spacing={1} direction='row'>
+              <Grid item className={classes.shortInput}>
+                <TextFieldView key='semester' name='semester' value={data['semester'].value} label={data['semester'].label}
+                               onChange={(event) => handleDataChange('semester', event.target.value)} />
+              </Grid>
+              <Grid item className={classes.shortInput}>
+                <TextFieldView key='year' name='year' value={data['year'].value} label={data['year'].label}
+                               onChange={(event) => handleDataChange('year', event.target.value)} />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item className={classes.itemContainer}>
+            <RadiosView classes={classes} field='gender' label={data['gender'].label}
+                        data={data} handleRadioChange={(event) => handleDataChange('gender', event.target.value)} />
+          </Grid>
+
+          <Grid item className={classes.itemContainer}>
+            <FormLabel component='legend'>Integrantes</FormLabel>
+            {
+              data['names'].value.map((name, idx) =>
+                <React.Fragment key={idx}>
+                  <div style={{marginTop: "0.5em"}}/>
+                  <TextFieldView className={classes.nameInput} name='names' value={name}
+                                 onChange={handleNamesInput(idx)} />
+                  {
+                    (idx === data['names'].value.length - 1 ?
+                      <IconButton aria-label='add name' className={classes.iconContainer} onClick={addName}>
+                        <AddIcon fontSize="small" />
+                      </IconButton>
+                      :
+                      <IconButton aria-label='remove name' className={classes.iconContainer} onClick={removeName(idx)}>
+                        <RemoveIcon fontSize="small" />
+                      </IconButton>)
+                  }
+                </React.Fragment>
+              )
             }
-          )}
+          </Grid>
           <Grid item>
             <Button variant='contained' color='primary' onClick={() => generateCover()}>
               Generar Caratula
