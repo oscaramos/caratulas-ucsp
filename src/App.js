@@ -49,7 +49,10 @@ const defaultData = {
   },
   semester: {
     value: debug ? "VIII Semester" : "",
-    label: "Semestre"
+    label: "Semestre",
+    options: ["Semestre I", "Semestre II", "Semestre II", "Semestre IV", "Semestre V"
+    , "Semestre VI", "Semestre VII", "Semestre VIII", "Semestre IX", "Semestre X"
+    , "Semestre XI", "Semestre XII"]
   },
   year: {
     value: debug ? "2020-1" : "2020-1",
@@ -82,8 +85,12 @@ const useStyles = makeStyles(theme => ({
   itemContainer: {
     width: "80%"
   },
-  shortInput: {
-    width: "50%",
+  semesterInput: {
+    width: "60%",
+    display: "inline"
+  },
+  yearInput: {
+    width: "40%",
     display: "inline"
   },
   nameInput: {
@@ -190,11 +197,17 @@ function App() {
           </Grid>
           <Grid item className={classes.itemContainer}> {/*----- Semester and Year -----*/}
             <Grid container spacing={1} direction='row'>
-              <Grid item className={classes.shortInput}>
-                <TextFieldView key='semester' name='semester' value={data['semester'].value} label={data['semester'].label}
-                               onChange={(event) => handleDataChange('semester', event.target.value)} />
+              <Grid item className={classes.semesterInput}>
+                <Autocomplete
+                  options={data['semester'].options}
+                  value={data['semester'].value}
+                  onInputChange={(event, value) => handleDataChange('semester', value)}
+                  renderInput={(params) =>
+                    <TextField {...params} label={data['semester'].label} variant="outlined" />
+                  }
+                />
               </Grid>
-              <Grid item className={classes.shortInput}>
+              <Grid item className={classes.yearInput}>
                 <TextFieldView key='year' name='year' value={data['year'].value} label={data['year'].label}
                                onChange={(event) => handleDataChange('year', event.target.value)} />
               </Grid>
