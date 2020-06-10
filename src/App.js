@@ -16,13 +16,28 @@ import FormControl from "@material-ui/core/FormControl";
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import IconButton from "@material-ui/core/IconButton";
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const debug = false;
 
 const defaultData = {
   career: {
-    value: debug ? "Ciencias de la computacion" : "",
-    label: "Carrera"
+    value: debug ? "Ciencias de la Computación" : "",
+    label: "Carrera",
+    options: [
+      "Administración de Empresas",
+      "Arquitectura y Urbanismo",
+      "Ciencias de la Computación",
+      "Ingenieria Mecatronica",
+      "Ingenieria Civil",
+      "Contabilidad",
+      "Derecho",
+      "Educación inicial y primaria",
+      "Ingenieria Electronica y Telecomunicaciones",
+      "Ingenieria Industrial",
+      "Psicologia",
+      ""
+    ]
   },
   course: {
     value: debug ? "Microprocessors" : "",
@@ -37,7 +52,7 @@ const defaultData = {
     label: "Semestre"
   },
   year: {
-    value: debug ? "1999" : "",
+    value: debug ? "2020-1" : "2020-1",
     label: "Año"
   },
   gender: {
@@ -122,16 +137,8 @@ function App() {
     });
   };
 
-  const handleTextInput = event => {
-    const field = event.target.name;
-    const value = event.target.value;
+  const handleDataChange = (field, value) => {
     setData({ ...data, [field]: { ...data[field], value } });
-  };
-
-  const handleRadioChange = event => {
-    const field = event.target.name;
-    const value = event.target.value;
-    setData({ ...data, [field]: { ...data[field], value } })
   };
 
   const handleNamesInput = index => event => {
@@ -164,7 +171,21 @@ function App() {
             <Typography variant='h5'>Carátulas UCSP</Typography>
           </Grid>
           {Object.keys(data).map((field) => {
-              if (field === 'names') {
+              if(field === 'career') {
+                return (
+                <Grid item key={field} className={classes.itemContainer}>
+                  <Autocomplete
+                    options={data['career'].options}
+                    value={data['career'].value}
+                    onInputChange={(event, value) => handleDataChange('career', value)}
+                    renderInput={(params) =>
+                      <TextField {...params} label={data['career'].label} variant="outlined" />
+                    }
+                  />
+                </Grid>
+                )
+              }
+              else if (field === 'names') {
                 return (
                   <Grid item key={field} className={classes.itemContainer}>
                     <FormLabel component='legend'>Integrantes</FormLabel>
@@ -195,11 +216,11 @@ function App() {
                     <Grid container spacing={1} direction='row'>
                       <Grid item className={classes.shortInput}>
                         <TextFieldView key='semester' name='semester' value={data[field].value} label={data[field].label}
-                                       onChange={handleTextInput} />
+                                       onChange={(event) => handleDataChange('semester', event.target.value)} />
                       </Grid>
                       <Grid item className={classes.shortInput}>
                         <TextFieldView key='year' name='year' value={data['year'].value} label={data['year'].label}
-                                       onChange={handleTextInput} />
+                                       onChange={(event) => handleDataChange('year', event.target.value)} />
                       </Grid>
                     </Grid>
                   </Grid>
@@ -210,14 +231,14 @@ function App() {
                 return (
                   <Grid item key={field} className={classes.itemContainer}>
                     <RadiosView classes={classes} key={field} field={field} label={data[field].label}
-                                data={data} handleRadioChange={handleRadioChange} />
+                                data={data} handleRadioChange={(event) => handleDataChange(field, event.target.value)} />
                   </Grid>
                 )
               } else {
                 return (
                   <Grid item key={field} className={classes.itemContainer}>
                     <TextFieldView key={field} name={field} value={data[field].value} label={data[field].label}
-                                   onChange={handleTextInput} />
+                                   onChange={(event) => handleDataChange(field, event.target.value)} />
                   </Grid>
                 )
               }
