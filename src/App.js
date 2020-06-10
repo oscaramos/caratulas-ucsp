@@ -52,7 +52,7 @@ const defaultData = {
     label: "Semestre",
     options: ["Semestre I", "Semestre II", "Semestre II", "Semestre IV", "Semestre V"
     , "Semestre VI", "Semestre VII", "Semestre VIII", "Semestre IX", "Semestre X"
-    , "Semestre XI", "Semestre XII"]
+    , "Semestre XI", "Semestre XII", ""]
   },
   year: {
     value: debug ? "2020-1" : "2020-1",
@@ -118,6 +118,7 @@ const RadiosView = ({ data, field, handleRadioChange }) => (
             key={key}
             name={field}
             value={key}
+            style={{marginRight: "1.25em"}}
             control={<Radio color='primary' />}
             label={data[field].radio[key]}
           />
@@ -181,7 +182,7 @@ function App() {
             <Autocomplete
               options={data['career'].options}
               value={data['career'].value}
-              onInputChange={(event, value) => handleDataChange('career', value)}
+              onChange={(event, value) => handleDataChange('career', value)}
               renderInput={(params) =>
                 <TextField {...params} label={data['career'].label} variant="outlined" />
               }
@@ -201,7 +202,7 @@ function App() {
                 <Autocomplete
                   options={data['semester'].options}
                   value={data['semester'].value}
-                  onInputChange={(event, value) => handleDataChange('semester', value)}
+                  onChange={(event, value) => handleDataChange('semester', value)}
                   renderInput={(params) =>
                     <TextField {...params} label={data['semester'].label} variant="outlined" />
                   }
