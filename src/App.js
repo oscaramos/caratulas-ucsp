@@ -170,7 +170,7 @@ function App() {
           <Grid item>
             <Typography variant='h5'>Carátulas UCSP</Typography>
           </Grid>
-          <Grid item className={classes.itemContainer}>
+          <Grid item className={classes.itemContainer}> {/*----- Career -----*/}
             <Autocomplete
               options={data['career'].options}
               value={data['career'].value}
@@ -180,15 +180,15 @@ function App() {
               }
             />
           </Grid>
-          <Grid item className={classes.itemContainer}>
+          <Grid item className={classes.itemContainer}> {/*----- Course -----*/}
             <TextFieldView name='course' value={data['course'].value} label={data['course'].label}
                            onChange={(event) => handleDataChange('course', event.target.value)} />
           </Grid>
-          <Grid item className={classes.itemContainer}>
+          <Grid item className={classes.itemContainer}> {/*----- Work -----*/}
             <TextFieldView name='work' value={data['work'].value} label={data['work'].label}
                            onChange={(event) => handleDataChange('work', event.target.value)} />
           </Grid>
-          <Grid item className={classes.itemContainer}>
+          <Grid item className={classes.itemContainer}> {/*----- Semester and Year -----*/}
             <Grid container spacing={1} direction='row'>
               <Grid item className={classes.shortInput}>
                 <TextFieldView key='semester' name='semester' value={data['semester'].value} label={data['semester'].label}
@@ -200,12 +200,12 @@ function App() {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item className={classes.itemContainer}>
+          <Grid item className={classes.itemContainer}> {/*----- Gender -----*/}
             <RadiosView classes={classes} field='gender' label={data['gender'].label}
                         data={data} handleRadioChange={(event) => handleDataChange('gender', event.target.value)} />
           </Grid>
 
-          <Grid item className={classes.itemContainer}>
+          <Grid item className={classes.itemContainer}> {/*----- Names -----*/}
             <FormLabel component='legend'>Integrantes</FormLabel>
             {
               data['names'].value.map((name, idx) =>
@@ -227,12 +227,12 @@ function App() {
               )
             }
           </Grid>
-          <Grid item>
+          <Grid item> {/*----- Button -----*/}
             <Button variant='contained' color='primary' onClick={() => generateCover()}>
               Generar Caratula
             </Button>
           </Grid>
-          <Grid item>
+          <Grid item> {/*----- Link -----*/}
             <a href={url}>{url}</a>
           </Grid>
         </Grid>
