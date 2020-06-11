@@ -22,20 +22,21 @@ const debug = false;
 
 const defaultData = {
   career: {
-    value: debug ? "Ciencias de la Computación" : "",
+    value: debug ? "Ciencias de la Computación" : "Ciencias de la Computación",
     label: "Carrera",
     options: [
+      "Ciencias de la Computación",
       "Administración de Empresas",
       "Arquitectura y Urbanismo",
-      "Ciencias de la Computación",
-      "Ingenieria Mecatronica",
-      "Ingenieria Civil",
       "Contabilidad",
       "Derecho",
       "Educación inicial y primaria",
+      "Ingenieria Mecatronica",
+      "Ingenieria Civil",
       "Ingenieria Electronica y Telecomunicaciones",
       "Ingenieria Industrial",
       "Psicologia",
+      "Sin carrera",
       ""
     ]
   },
