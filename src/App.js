@@ -244,11 +244,11 @@ function App() {
               {
                 data['names'].value.map((name, idx) =>
                   <React.Fragment key={idx}>
-                    <Grid item sm={10} key={idx}>
+                    <Grid item sm={10} key={idx+"1"}>
                       <TextFieldView name='names' value={name}
                                      onChange={handleNamesInput(idx)} />
                     </Grid>
-                    <Grid item sm={2} key={idx} style={{ textAlign: "left" }}>
+                    <Grid item sm={2} key={idx+"2"} style={{ textAlign: "left" }}>
                       {
                         (idx === data['names'].value.length - 1 ?
                           <IconButton aria-label='add name' onClick={addName}>
