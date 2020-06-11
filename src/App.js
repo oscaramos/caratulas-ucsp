@@ -137,6 +137,28 @@ function App() {
 
     fetchGenerateCover(convertToDataApi(data)).then(pdfUrl => {
       setUrl(pdfUrl);
+      setTimeout(() => {
+        const answer = prompt("¿Qué tal te parecio? ¿De 0 a 5 estrellas cuanto le pondrias? ¿Tiene algún comentario?");
+        // Enviar respuesta a server
+        const options = {
+          method: 'POST',
+          body: JSON.stringify({answer}),
+          headers:{
+            'Content-Type': 'application/json'
+          }
+        };
+        const url = process.env.NODE_ENV.includes('development') ? 'http://localhost:4000/answer' : 'https://caratulas-ucsp-api.herokuapp.com/answer';
+        fetch(url, options)
+          .then(res=> res.json())
+          .then(res => res.link);
+
+        if (answer)
+          alert("¡Gracias por responder!");
+
+      }, 3000);
+
+
+
     });
   };
 
