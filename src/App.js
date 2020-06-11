@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { fetchGenerateCover } from "./api";
+import { fetchGenerateCover, sendMessageToBackend } from "./api";
 
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -124,12 +124,17 @@ const RadiosView = ({ data, field, handleRadioChange }) => (
   </FormControl>
 )
 
+
+
 function App() {
   const classes = useStyles();
   const [url, setUrl] = useState("Aquí aparecerá un link");
   const [data, setData] = useState(defaultData);
   const [rank, setRank] = useState(0);
-  const [isSend, setIsSend] = useState(false);
+  const [isHiddenRank, setIsHiddenRank] = useState(true);
+  const [isHiddenComentary, setIsHiddenComentary] = useState(true);
+  const [commentary, setCommentary] = useState("");
+  const [extraBottomText, setExtraBottomText] = useState("");
 
   const generateCover = () => {
     const convertToDataApi = data =>
@@ -141,7 +146,7 @@ function App() {
     fetchGenerateCover(convertToDataApi(data)).then(pdfUrl => {
       setUrl(pdfUrl);
       setTimeout(() => {
-        setIsSend(true);
+        setIsHiddenRank(false);
       }, 1000);
     });
   };
@@ -171,20 +176,21 @@ function App() {
   }
 
   const handleRank = (event, newRank) => {
+    if(!newRank) return;
     setRank(newRank);
+    setTimeout(() => {
+      setIsHiddenRank(true);
+      setIsHiddenComentary(false);
+    }, 3000)
 
-    const request = { answer: `Estrellas ${newRank}`};
-    const options = {
-      method: 'POST',
-      body: JSON.stringify(request),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-    const url = process.env.NODE_ENV.includes('development') ? 'http://localhost:4000/answer' : 'https://caratulas-ucsp-api.herokuapp.com/answer';
-    fetch(url, options)
-      .then(res => res.json())
-      .then(res => res.link);
+    const message = `Estrellas ${newRank}`;
+    sendMessageToBackend(message);
+  }
+
+  const handleSendCommentary = () => {
+    sendMessageToBackend(commentary);
+    setIsHiddenComentary(true);
+    setExtraBottomText("¡Gracias por comentar!");
   }
 
 
@@ -275,12 +281,37 @@ function App() {
           </Grid>
           {" "}
           {/*-----Ranking-----*/}
-          {isSend ?
+          {!isHiddenRank?
             <Grid item>
               <Rating name='pristine' value={rank} onChange={handleRank} />
             </Grid>
             :
             <React.Fragment />
+          }
+          {/*-----Commentary-----*/}
+          {
+            !isHiddenComentary?
+              <React.Fragment>
+                <Grid item>
+                  <TextField value={commentary} label="¿Algún comentario?" onChange={(event) => setCommentary(event.target.value)} />
+                </Grid>
+                <Grid item>
+                  <Button variant='contained' color='secondary' onClick={handleSendCommentary}>
+                    Enviar
+                  </Button>
+                </Grid>
+              </React.Fragment>
+              :
+              <React.Fragment/>
+          }
+          {/*-----Extra Bottom Text-----*/}
+          {
+            extraBottomText?
+              <Grid item>
+                {extraBottomText}
+              </Grid>
+              :
+              <React.Fragment />
           }
         </Grid>
       </Paper>
