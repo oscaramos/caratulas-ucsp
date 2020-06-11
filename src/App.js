@@ -17,6 +17,7 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import IconButton from "@material-ui/core/IconButton";
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import Rating from "@material-ui/lab/Rating";
 
 const debug = false;
 
@@ -52,8 +53,8 @@ const defaultData = {
     value: debug ? "VIII Semester" : "",
     label: "Semestre",
     options: ["Semestre I", "Semestre II", "Semestre II", "Semestre IV", "Semestre V"
-    , "Semestre VI", "Semestre VII", "Semestre VIII", "Semestre IX", "Semestre X"
-    , "Semestre XI", "Semestre XII", ""]
+      , "Semestre VI", "Semestre VII", "Semestre VIII", "Semestre IX", "Semestre X"
+      , "Semestre XI", "Semestre XII", ""]
   },
   year: {
     value: debug ? "2020-1" : "2020-1",
@@ -113,7 +114,7 @@ const RadiosView = ({ data, field, handleRadioChange }) => (
             key={key}
             name={field}
             value={key}
-            style={{marginRight: "1.25em"}}
+            style={{ marginRight: "1.25em" }}
             control={<Radio color='primary' />}
             label={data[field].radio[key]}
           />
@@ -127,6 +128,8 @@ function App() {
   const classes = useStyles();
   const [url, setUrl] = useState("Aquí aparecerá un link");
   const [data, setData] = useState(defaultData);
+  const [rank, setRank] = useState(0);
+  const [isSend, setIsSend] = useState(false);
 
   const generateCover = () => {
     const convertToDataApi = data =>
@@ -138,27 +141,8 @@ function App() {
     fetchGenerateCover(convertToDataApi(data)).then(pdfUrl => {
       setUrl(pdfUrl);
       setTimeout(() => {
-        const answer = prompt("¿Qué tal te parecio? ¿De 0 a 5 estrellas cuanto le pondrias? ¿Tiene algún comentario?");
-        // Enviar respuesta a server
-        const options = {
-          method: 'POST',
-          body: JSON.stringify({answer}),
-          headers:{
-            'Content-Type': 'application/json'
-          }
-        };
-        const url = process.env.NODE_ENV.includes('development') ? 'http://localhost:4000/answer' : 'https://caratulas-ucsp-api.herokuapp.com/answer';
-        fetch(url, options)
-          .then(res=> res.json())
-          .then(res => res.link);
-
-        if (answer)
-          alert("¡Gracias por responder!");
-
-      }, 3000);
-
-
-
+        setIsSend(true);
+      }, 1000);
     });
   };
 
@@ -177,13 +161,30 @@ function App() {
   }
 
   const addName = () => {
-    setData({...data, names: {...data.names, value: [...data.names.value, ""]}})
+    setData({ ...data, names: { ...data.names, value: [...data.names.value, ""] } })
   }
 
   const removeName = indexToRemove => () => {
     const removeNameFromData = value => value.filter((x, idx) => idx !== indexToRemove)
 
-    setData({...data, names: {...data.names, value: removeNameFromData(data.names.value) } })
+    setData({ ...data, names: { ...data.names, value: removeNameFromData(data.names.value) } })
+  }
+
+  const handleRank = (event, newRank) => {
+    setRank(newRank);
+
+    const request = { answer: `Estrellas ${newRank}`};
+    const options = {
+      method: 'POST',
+      body: JSON.stringify(request),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    const url = process.env.NODE_ENV.includes('development') ? 'http://localhost:4000/answer' : 'https://caratulas-ucsp-api.herokuapp.com/answer';
+    fetch(url, options)
+      .then(res => res.json())
+      .then(res => res.link);
   }
 
 
@@ -191,7 +192,7 @@ function App() {
     <Container maxWidth='xs' className={classes.root}>
       <Paper>
         <Grid container spacing={2} direction='column' alignItems='center'
-          className={classes.form} component='form' noValidate autoComplete='off'>
+              className={classes.form} component='form' noValidate autoComplete='off'>
           <Grid item>
             <Typography variant='h5'>Carátulas UCSP</Typography>
           </Grid>
@@ -201,7 +202,7 @@ function App() {
               value={data['career'].value}
               onChange={(event, value) => handleDataChange('career', value)}
               renderInput={(params) =>
-                <TextField {...params} label={data['career'].label} variant="outlined" />
+                <TextField {...params} label={data['career'].label} variant='outlined' />
               }
             />
           </Grid>
@@ -221,7 +222,7 @@ function App() {
                   value={data['semester'].value}
                   onChange={(event, value) => handleDataChange('semester', value)}
                   renderInput={(params) =>
-                    <TextField {...params} label={data['semester'].label} variant="outlined" />
+                    <TextField {...params} label={data['semester'].label} variant='outlined' />
                   }
                 />
               </Grid>
@@ -238,7 +239,7 @@ function App() {
 
           <Grid item className={classes.itemContainer}> {/*----- Names -----*/}
             <FormLabel component='legend'>Integrantes</FormLabel>
-            <div style={{width: "100%", height: "0.5em"}} />
+            <div style={{ width: "100%", height: "0.5em" }} />
             <Grid container spacing={1}>
               {
                 data['names'].value.map((name, idx) =>
@@ -251,11 +252,11 @@ function App() {
                       {
                         (idx === data['names'].value.length - 1 ?
                           <IconButton aria-label='add name' onClick={addName}>
-                            <AddIcon fontSize="small" />
+                            <AddIcon fontSize='small' />
                           </IconButton>
                           :
                           <IconButton aria-label='remove name' onClick={removeName(idx)}>
-                            <RemoveIcon fontSize="small" />
+                            <RemoveIcon fontSize='small' />
                           </IconButton>)
                       }
                     </Grid>
@@ -272,6 +273,15 @@ function App() {
           <Grid item> {/*----- Link -----*/}
             <a href={url}>{url}</a>
           </Grid>
+          {" "}
+          {/*-----Ranking-----*/}
+          {isSend ?
+            <Grid item>
+              <Rating name='pristine' value={rank} onChange={handleRank} />
+            </Grid>
+            :
+            <React.Fragment />
+          }
         </Grid>
       </Paper>
     </Container>
