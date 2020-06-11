@@ -92,12 +92,6 @@ const useStyles = makeStyles(theme => ({
   yearInput: {
     width: "40%",
     display: "inline"
-  },
-  nameInput: {
-    width: "85%",
-  },
-  iconContainer: {
-    paddingTop: "0.65em"
   }
 }));
 
@@ -221,25 +215,31 @@ function App() {
 
           <Grid item className={classes.itemContainer}> {/*----- Names -----*/}
             <FormLabel component='legend'>Integrantes</FormLabel>
-            {
-              data['names'].value.map((name, idx) =>
-                <React.Fragment key={idx}>
-                  <div style={{marginTop: "0.5em"}}/>
-                  <TextFieldView className={classes.nameInput} name='names' value={name}
-                                 onChange={handleNamesInput(idx)} />
-                  {
-                    (idx === data['names'].value.length - 1 ?
-                      <IconButton aria-label='add name' className={classes.iconContainer} onClick={addName}>
-                        <AddIcon fontSize="small" />
-                      </IconButton>
-                      :
-                      <IconButton aria-label='remove name' className={classes.iconContainer} onClick={removeName(idx)}>
-                        <RemoveIcon fontSize="small" />
-                      </IconButton>)
-                  }
-                </React.Fragment>
-              )
-            }
+            <div style={{width: "100%", height: "0.5em"}} />
+            <Grid container spacing={1}>
+              {
+                data['names'].value.map((name, idx) =>
+                  <React.Fragment key={idx}>
+                    <Grid item sm={10} key={idx}>
+                      <TextFieldView name='names' value={name}
+                                     onChange={handleNamesInput(idx)} />
+                    </Grid>
+                    <Grid item sm={2} key={idx} style={{ textAlign: "left" }}>
+                      {
+                        (idx === data['names'].value.length - 1 ?
+                          <IconButton aria-label='add name' onClick={addName}>
+                            <AddIcon fontSize="small" />
+                          </IconButton>
+                          :
+                          <IconButton aria-label='remove name' onClick={removeName(idx)}>
+                            <RemoveIcon fontSize="small" />
+                          </IconButton>)
+                      }
+                    </Grid>
+                  </React.Fragment>
+                )
+              }
+            </Grid>
           </Grid>
           <Grid item> {/*----- Button -----*/}
             <Button variant='contained' color='primary' onClick={() => generateCover()}>
