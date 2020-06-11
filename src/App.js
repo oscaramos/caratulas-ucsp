@@ -22,10 +22,10 @@ const debug = false;
 
 const defaultData = {
   career: {
-    value: debug ? "Ciencias de la Computación" : "Ciencias de la Computación",
+    value: debug ? "Ciencia de la Computación" : "Ciencia de la Computación",
     label: "Carrera",
     options: [
-      "Ciencias de la Computación",
+      "Ciencia de la Computación",
       "Administración de Empresas",
       "Arquitectura y Urbanismo",
       "Contabilidad",
