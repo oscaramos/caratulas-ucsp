@@ -131,8 +131,9 @@ function App() {
   const [url, setUrl] = useState("Aquí aparecerá un link");
   const [data, setData] = useState(defaultData);
   const [rank, setRank] = useState(0);
+  const [clickedGenerate, setClickedGenerate] = useState(false);
   const [isHiddenRank, setIsHiddenRank] = useState(true);
-  const [isHiddenComentary, setIsHiddenComentary] = useState(true);
+  const [isHiddenCommentary, setIsHiddenCommentary] = useState(true);
   const [commentary, setCommentary] = useState("");
   const [extraBottomText, setExtraBottomText] = useState("");
 
@@ -143,12 +144,20 @@ function App() {
         return prev;
       }, {});
 
-    fetchGenerateCover(convertToDataApi(data)).then(pdfUrl => {
-      setUrl(pdfUrl);
-      setTimeout(() => {
-        setIsHiddenRank(false);
-      }, 1000);
-    });
+    const allFieldsAreFilled = () => {
+      const empties = Object.values(convertToDataApi(data)).filter(val => !val);
+      return empties.length === 0;
+    };
+
+    setClickedGenerate(true);
+    if(allFieldsAreFilled()) {
+      fetchGenerateCover(convertToDataApi(data)).then(pdfUrl => {
+        setUrl(pdfUrl);
+        setTimeout(() => {
+          setIsHiddenRank(false);
+        }, 1000);
+      });
+    }
   };
 
   const handleDataChange = (field, value) => {
@@ -180,16 +189,15 @@ function App() {
     setRank(newRank);
     setTimeout(() => {
       setIsHiddenRank(true);
-      setIsHiddenComentary(false);
+      setIsHiddenCommentary(false);
     }, 3000)
 
-    const message = `Estrellas ${newRank}`;
-    sendMessageToBackend(message);
+    sendMessageToBackend(`Estrellas ${newRank}`);
   }
 
   const handleSendCommentary = () => {
     sendMessageToBackend(commentary);
-    setIsHiddenComentary(true);
+    setIsHiddenCommentary(true);
     setExtraBottomText("¡Gracias por comentar!");
   }
 
@@ -208,17 +216,20 @@ function App() {
               value={data['career'].value}
               onChange={(event, value) => handleDataChange('career', value)}
               renderInput={(params) =>
-                <TextField {...params} label={data['career'].label} variant='outlined' />
+                <TextFieldView {...params} name='career' label={data['career'].label}
+                               error={clickedGenerate && !data['career'].value}/>
               }
             />
           </Grid>
           <Grid item className={classes.itemContainer}> {/*----- Course -----*/}
             <TextFieldView name='course' value={data['course'].value} label={data['course'].label}
-                           onChange={(event) => handleDataChange('course', event.target.value)} />
+                           onChange={(event) => handleDataChange('course', event.target.value)}
+                           error={clickedGenerate && !data['course'].value}/>
           </Grid>
           <Grid item className={classes.itemContainer}> {/*----- Work -----*/}
             <TextFieldView name='work' value={data['work'].value} label={data['work'].label}
-                           onChange={(event) => handleDataChange('work', event.target.value)} />
+                           onChange={(event) => handleDataChange('work', event.target.value)}
+                           error={clickedGenerate && !data['work'].value} />
           </Grid>
           <Grid item className={classes.itemContainer}> {/*----- Semester and Year -----*/}
             <Grid container spacing={1} direction='row'>
@@ -228,13 +239,15 @@ function App() {
                   value={data['semester'].value}
                   onChange={(event, value) => handleDataChange('semester', value)}
                   renderInput={(params) =>
-                    <TextField {...params} label={data['semester'].label} variant='outlined' />
+                    <TextFieldView {...params} name='semester' label={data['semester'].label}
+                                   error={clickedGenerate && !data['semester'].value}/>
                   }
                 />
               </Grid>
               <Grid item className={classes.yearInput}>
                 <TextFieldView key='year' name='year' value={data['year'].value} label={data['year'].label}
-                               onChange={(event) => handleDataChange('year', event.target.value)} />
+                               onChange={(event) => handleDataChange('year', event.target.value)}
+                               error={clickedGenerate && !data['year'].value}/>
               </Grid>
             </Grid>
           </Grid>
@@ -252,7 +265,8 @@ function App() {
                   <React.Fragment key={idx}>
                     <Grid item sm={10} key={idx+"1"}>
                       <TextFieldView name='names' value={name}
-                                     onChange={handleNamesInput(idx)} />
+                                     onChange={handleNamesInput(idx)}
+                                     error={clickedGenerate && !data['names'].value}/>
                     </Grid>
                     <Grid item sm={2} key={idx+"2"} style={{ textAlign: "left" }}>
                       {
@@ -290,7 +304,7 @@ function App() {
           }
           {/*-----Commentary-----*/}
           {
-            !isHiddenComentary?
+            !isHiddenCommentary?
               <React.Fragment>
                 <Grid item>
                   <TextField value={commentary} label="¿Algún comentario?" onChange={(event) => setCommentary(event.target.value)} />
