@@ -18,6 +18,7 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import IconButton from "@material-ui/core/IconButton";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Rating from "@material-ui/lab/Rating";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const debug = false;
 
@@ -128,14 +129,21 @@ const RadiosView = ({ data, field, handleRadioChange }) => (
 
 function App() {
   const classes = useStyles();
+
   const [url, setUrl] = useState("Aquí aparecerá un link");
   const [data, setData] = useState(defaultData);
-  const [rank, setRank] = useState(0);
+
+  const [isFetchingCover, setIsFetchingCover] = useState(false);
   const [clickedGenerate, setClickedGenerate] = useState(false);
+
+  const [rank, setRank] = useState(0);
   const [isHiddenRank, setIsHiddenRank] = useState(true);
-  const [isHiddenCommentary, setIsHiddenCommentary] = useState(true);
+
   const [commentary, setCommentary] = useState("");
+  const [isHiddenCommentary, setIsHiddenCommentary] = useState(true);
+
   const [extraBottomText, setExtraBottomText] = useState("");
+
 
   const generateCover = () => {
     const convertToDataApi = data =>
@@ -149,14 +157,26 @@ function App() {
       return empties.length === 0;
     };
 
+    const showRank = (milliseconds) => {
+      setTimeout(() => {
+        setIsHiddenRank(false);
+      }, milliseconds);
+    }
+
     setClickedGenerate(true);
     if(allFieldsAreFilled()) {
-      fetchGenerateCover(convertToDataApi(data)).then(pdfUrl => {
-        setUrl(pdfUrl);
-        setTimeout(() => {
-          setIsHiddenRank(false);
-        }, 1000);
-      });
+      showRank(3000);
+      setIsFetchingCover(true);
+      fetchGenerateCover(convertToDataApi(data))
+        .then(pdfUrl => {
+          setUrl(pdfUrl);
+          setIsFetchingCover(false);
+        })
+        .catch(error => {
+          alert("Error: Servidor posiblemente apagado\n" +
+                "Solución: Esperar de 1 a 2 minutos y volver a generar una carátula");
+          setIsFetchingCover(false);
+        });
     }
   };
 
@@ -201,12 +221,13 @@ function App() {
     setExtraBottomText("¡Gracias por comentar!");
   }
 
-
   return (
     <Container maxWidth='xs' className={classes.root}>
       <Paper>
         <Grid container spacing={2} direction='column' alignItems='center'
               className={classes.form} component='form' noValidate autoComplete='off'>
+          {" "}
+          {/*----- User data input -----*/}
           <Grid item>
             <Typography variant='h5'>Carátulas UCSP</Typography>
           </Grid>
@@ -285,13 +306,20 @@ function App() {
               }
             </Grid>
           </Grid>
+          {" "}
+          {/*----- User interactions -----*/}
           <Grid item> {/*----- Button -----*/}
             <Button variant='contained' color='primary' onClick={() => generateCover()}>
               Generar Caratula
             </Button>
           </Grid>
           <Grid item> {/*----- Link -----*/}
-            <a href={url}>{url}</a>
+            {
+              !isFetchingCover?
+              <a href={url}>{url}</a>
+                :
+              <CircularProgress />
+            }
           </Grid>
           {" "}
           {/*-----Ranking-----*/}
@@ -316,7 +344,7 @@ function App() {
                 </Grid>
               </React.Fragment>
               :
-              <React.Fragment/>
+              <React.Fragment />
           }
           {/*-----Extra Bottom Text-----*/}
           {
