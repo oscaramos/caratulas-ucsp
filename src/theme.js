@@ -40,6 +40,14 @@ const theme = createMuiTheme({
       color: `${arcBlue}`,
       lineHeight: 1.5
     }
+  },
+  //MuiOutlinedInput-adornedEnd
+  overrides: {
+    MuiOutlinedInput: {
+      adornedEnd: {
+        paddingRight: 0
+      }
+    }
   }
 });
 
