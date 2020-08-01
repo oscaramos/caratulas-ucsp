@@ -14,7 +14,7 @@ Puede ver el servicio de back-end [aquí](https://github.com/oscaramos/caratulas
 
 ## Problemas
 * El servicio de back-end no es de [paga](https://www.heroku.com/pricing), por lo tanto puede experimentarse lentitud en las consultas. 
-* Hay un problema en el diseño en que, en algunos telefonos celulares los campos de los nombres y los botones de agregar/remover se apilan. 
+* ~~Hay un problema en el diseño en que, en algunos telefonos celulares los campos de los nombres y los botones de agregar/remover se apilan.~~
 * El link generado se mueve a la izquierda en algunos telefonos celulares.
 * Problemas menores relacionados al pdf generado.
 
