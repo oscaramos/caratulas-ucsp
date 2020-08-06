@@ -12,7 +12,7 @@ Puede explorar el back-end [aquí](https://github.com/oscaramos/caratulas-ucsp-a
 
 
 ## Problemas
-* ~~El servicio de back-end no es de [paga](https://www.heroku.com/pricing), por lo tanto puede experimentarse lentitud en las consultas~~ Ahora usamos otro proveedor
+* ~~El servicio de back-end no es de [paga](https://www.heroku.com/pricing), por lo tanto puede experimentarse lentitud en las consultas~~ Ahora usamos otro [proveedor](https://aws.amazon.com/es/ec2/)
 * ~~Hay un problema en el diseño en que, en algunos telefonos celulares los campos de los nombres y los botones de agregar/remover se apilan.~~ Solucionado
 * El link generado se mueve a la izquierda en algunos telefonos celulares.
 * Problemas menores relacionados al pdf generado.
