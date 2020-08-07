@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from 'react'
 
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -100,8 +100,6 @@ const useStyles = makeStyles(theme => ({
     display: "inline"
   }
 }));
-
-
 
 function App() {
   const classes = useStyles();
@@ -215,6 +213,7 @@ function App() {
               options={data['career'].options}
               value={data['career'].value}
               onChange={(event, value) => handleDataChange('career', value)}
+              openOnFocus
               renderInput={(params) =>
                 <TextField
                   name='career'
@@ -265,6 +264,7 @@ function App() {
                   options={data['semester'].options}
                   value={data['semester'].value}
                   onChange={(event, value) => handleDataChange('semester', value)}
+                  openOnFocus
                   renderInput={(params) =>
                     <TextField
                       name='semester'
@@ -330,6 +330,15 @@ function App() {
                       name='names'
                       value={name}
                       onChange={changeName(index)}
+                      autoFocus={true}
+                      onKeyDown={keyEvent => {
+                        if(keyEvent.ctrlKey && keyEvent.key === 'Enter') {
+                          generateCover()
+                        }
+                        else if (keyEvent.key === 'Enter') {
+                          addName()
+                        }
+                      }}
                       error={clickedGenerate && data['names'].value.length===0}
                       fullWidth
                       InputProps={{
@@ -371,6 +380,11 @@ function App() {
                 :
                 <CircularProgress />
             }
+          </Grid>
+          <Grid item>
+            <Typography variant="caption">
+              Intente hacerlo sin mouse
+            </Typography>
           </Grid>
         </Grid>
       </Paper>
