@@ -6,8 +6,8 @@ Puede explorar el back-end [aquí](https://github.com/oscaramos/caratulas-ucsp-a
 * Formulario agradable a la vista, facil de usar
 * Aplicación responsive para que luzca bien en todas las pantallas
 * Carátulas generadas en latex para mejor visualización de la caratula
-* Aplicación instalable en computadoras de escritorio y telefonos celulares ([PWA](https://www.xataka.com/basics/que-es-una-aplicacion-web-progresiva-o-pwa)))
-* Uso de las últimas tecnologías en el mercado(React, Docker)
+* Aplicación instalable en computadoras de escritorio y telefonos celulares ([PWA](https://www.xataka.com/basics/que-es-una-aplicacion-web-progresiva-o-pwa))
+* Uso de las últimas tecnologías en el mercado ([React](https://es.reactjs.org/), [Docker](https://www.docker.com/))
 * Mantenimiento disponible durante todo el tiempo libre que tenga
 
 
