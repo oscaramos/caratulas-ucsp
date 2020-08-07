@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -16,6 +16,8 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import { makeStyles } from "@material-ui/core/styles";
+
+import Collapse from '@material-ui/core/Collapse'
 
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
@@ -106,9 +108,18 @@ function App() {
 
   const [url, setUrl] = useState("");
   const [data, setData] = useState(defaultData);
+  const [collapseGender, setCollapseGender] = useState(false);
 
   const [isFetchingCover, setIsFetchingCover] = useState(false);
   const [clickedGenerate, setClickedGenerate] = useState(false);
+
+  useEffect(() => {
+    if(data.names.value.length > 1) {
+      setCollapseGender(true)
+    } else {
+      setCollapseGender(false)
+    }
+  }, [data])
 
   const generateCover = () => {
     const convertToDataApi = data =>
@@ -283,24 +294,26 @@ function App() {
           {" "}
           {/*----- Gender -----*/}
           <Grid item className={classes.itemContainer}>
-            <FormControl component='fieldset'>
-              <FormLabel component='legend'>{data['gender'].label}</FormLabel>
-              <RadioGroup row aria-label={data['gender'].label} value={data['gender'].value}
-                          onChange={(event) => handleDataChange('gender', event.target.value)}>
-                {
-                  Object.entries(data['gender'].radio).map(([key, label]) => (
-                    <FormControlLabel
-                      name='gender'
-                      key={key}
-                      value={key}
-                      label={label}
-                      style={{ marginRight: "1.25em" }}
-                      control={<Radio color='primary' />}
-                    />
-                  ))
-                }
-              </RadioGroup>
-            </FormControl>
+            <Collapse in={!collapseGender}>
+              <FormControl component='fieldset'>
+                <FormLabel component='legend'>{data['gender'].label}</FormLabel>
+                <RadioGroup row aria-label={data['gender'].label} value={data['gender'].value}
+                            onChange={(event) => handleDataChange('gender', event.target.value)}>
+                  {
+                    Object.entries(data['gender'].radio).map(([key, label]) => (
+                      <FormControlLabel
+                        name='gender'
+                        key={key}
+                        value={key}
+                        label={label}
+                        style={{ marginRight: '1.25em' }}
+                        control={<Radio color='primary' />}
+                      />
+                    ))
+                  }
+                </RadioGroup>
+              </FormControl>
+            </Collapse>
           </Grid>
 
           {" "}
