@@ -39,6 +39,13 @@ const theme = createMuiTheme({
       fontSize: '2.5em',
       color: `${arcBlue}`,
       lineHeight: 1.5
+    },
+    caption: {
+      fontFamily: 'Raleway',
+      fontWeight: 400,
+      fontSize: '0.75em',
+      color: `${background}`,
+      lineHeight: 1.66
     }
   },
   //MuiOutlinedInput-adornedEnd
