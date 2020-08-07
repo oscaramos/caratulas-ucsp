@@ -11,14 +11,14 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormLabel from "@material-ui/core/FormLabel";
 import FormControl from "@material-ui/core/FormControl";
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
 import IconButton from "@material-ui/core/IconButton";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import { makeStyles } from "@material-ui/core/styles";
 
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 
 import { fetchGenerateCover } from "./api";
@@ -99,32 +99,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const TextFieldView = ({ ...otherprops }) =>
-  <TextField
-    variant='outlined'
-    fullWidth
-    {...otherprops}
-  />;
-
-const RadiosView = ({ data, field, handleRadioChange }) => (
-  <FormControl component='fieldset' key={field}>
-    <FormLabel component='legend'>{data[field].label}</FormLabel>
-    <RadioGroup row aria-label={data[field].label} value={data[field].value} onChange={handleRadioChange}>
-      {
-        Object.keys(data[field].radio).map(key => (
-          <FormControlLabel
-            key={key}
-            name={field}
-            value={key}
-            style={{ marginRight: "1.25em" }}
-            control={<Radio color='primary' />}
-            label={data[field].radio[key]}
-          />
-        ))
-      }
-    </RadioGroup>
-  </FormControl>
-)
 
 
 function App() {
@@ -165,39 +139,64 @@ function App() {
   };
 
   const handleDataChange = (field, value) => {
-    setData({ ...data, [field]: { ...data[field], value } });
+    setData({
+      ...data,
+      [field]: {
+        ...data[field],
+        value
+      }
+    });
   };
 
-  const handleNamesInput = index => event => {
+  const changeName = index => event => {
     const changeNameFromData = (value) => {
       const newValues = [...value];
       newValues[index] = event.target.value;
       return newValues;
     }
 
-    setData({ ...data, names: { ...data.names, value: changeNameFromData(data.names.value) } });
+    setData({
+      ...data,
+      names: {
+        ...data.names,
+        value: changeNameFromData(data.names.value)
+      }
+    });
   }
 
   const addName = () => {
-    setData({ ...data, names: { ...data.names, value: [...data.names.value, ""] } })
+    setData({
+      ...data,
+      names: {
+        ...data.names,
+        value: [...data.names.value, ""]
+      }
+    })
   }
 
   const removeName = indexToRemove => () => {
-    const removeNameFromData = value => value.filter((x, idx) => idx !== indexToRemove)
-
-    setData({ ...data, names: { ...data.names, value: removeNameFromData(data.names.value) } })
+    setData({
+      ...data,
+      names: {
+        ...data.names,
+        value: data.names.value.filter((_, idx) => idx !== indexToRemove)
+      }
+    })
   }
 
   return (
     <Container maxWidth='xs' className={classes.root}>
       <Paper>
+        {" "}
+        {/*----- User data input -----*/}
         <Grid container spacing={2} direction='column' alignItems='center'
               className={classes.form} component='form' noValidate autoComplete='off'>
           {" "}
-          {/*----- User data input -----*/}
+          {/*----- Header -----*/}
           <Grid item>
-            <Typography variant='h5'>Carátulas UCSP</Typography>
+            <Typography variant='h4'>Carátulas UCSP</Typography>
           </Grid>
+
           {" "}
           {/*----- Career -----*/}
           <Grid item className={classes.itemContainer}>
@@ -206,25 +205,46 @@ function App() {
               value={data['career'].value}
               onChange={(event, value) => handleDataChange('career', value)}
               renderInput={(params) =>
-                <TextFieldView {...params} name='career' label={data['career'].label}
-                               error={clickedGenerate && !data['career'].value} />
+                <TextField
+                  name='career'
+                  variant='outlined'
+                  label={data['career'].label}
+                  error={clickedGenerate && !data['career'].value}
+                  fullWidth
+                  {...params}
+                />
               }
             />
           </Grid>
+
           {" "}
           {/*----- Course -----*/}
           <Grid item className={classes.itemContainer}>
-            <TextFieldView name='course' value={data['course'].value} label={data['course'].label}
-                           onChange={(event) => handleDataChange('course', event.target.value)}
-                           error={clickedGenerate && !data['course'].value} />
+            <TextField
+              name='course'
+              variant='outlined'
+              value={data['course'].value}
+              label={data['course'].label}
+              onChange={(event) => handleDataChange('course', event.target.value)}
+              error={clickedGenerate && !data['course'].value}
+              fullWidth
+            />
           </Grid>
+
           {" "}
           {/*----- Work -----*/}
           <Grid item className={classes.itemContainer}>
-            <TextFieldView name='work' value={data['work'].value} label={data['work'].label}
-                           onChange={(event) => handleDataChange('work', event.target.value)}
-                           error={clickedGenerate && !data['work'].value} />
+            <TextField
+              name='work'
+              variant='outlined'
+              value={data['work'].value}
+              label={data['work'].label}
+              onChange={(event) => handleDataChange('work', event.target.value)}
+              error={clickedGenerate && !data['work'].value}
+              fullWidth
+            />
           </Grid>
+
           {" "}
           {/*----- Semester and Year -----*/}
           <Grid item className={classes.itemContainer}>
@@ -235,23 +255,52 @@ function App() {
                   value={data['semester'].value}
                   onChange={(event, value) => handleDataChange('semester', value)}
                   renderInput={(params) =>
-                    <TextFieldView {...params} name='semester' label={data['semester'].label}
-                                   error={clickedGenerate && !data['semester'].value} />
+                    <TextField
+                      name='semester'
+                      variant='outlined'
+                      label={data['semester'].label}
+                      error={clickedGenerate && !data['semester'].value}
+                      fullWidth
+                      {...params}
+                    />
                   }
                 />
               </Grid>
               <Grid item className={classes.yearInput}>
-                <TextFieldView key='year' name='year' value={data['year'].value} label={data['year'].label}
-                               onChange={(event) => handleDataChange('year', event.target.value)}
-                               error={clickedGenerate && !data['year'].value} />
+                <TextField
+                  name='year'
+                  variant='outlined'
+                  value={data['year'].value}
+                  label={data['year'].label}
+                  onChange={(event) => handleDataChange('year', event.target.value)}
+                  error={clickedGenerate && !data['year'].value}
+                  fullWidth
+                />
               </Grid>
             </Grid>
           </Grid>
+
           {" "}
           {/*----- Gender -----*/}
           <Grid item className={classes.itemContainer}>
-            <RadiosView classes={classes} field='gender' label={data['gender'].label}
-                        data={data} handleRadioChange={(event) => handleDataChange('gender', event.target.value)} />
+            <FormControl component='fieldset'>
+              <FormLabel component='legend'>{data['gender'].label}</FormLabel>
+              <RadioGroup row aria-label={data['gender'].label} value={data['gender'].value}
+                          onChange={(event) => handleDataChange('gender', event.target.value)}>
+                {
+                  Object.entries(data['gender'].radio).map(([key, label]) => (
+                    <FormControlLabel
+                      name='gender'
+                      key={key}
+                      value={key}
+                      label={label}
+                      style={{ marginRight: "1.25em" }}
+                      control={<Radio color='primary' />}
+                    />
+                  ))
+                }
+              </RadioGroup>
+            </FormControl>
           </Grid>
 
           {" "}
@@ -261,34 +310,38 @@ function App() {
             <div style={{ width: "100%", height: "0.5em" }} />
             <Grid container spacing={1}>
               {
-                data['names'].value.map((name, idx) =>
-                  <Grid item container key={idx}>
-                    <TextFieldView name='names' value={name}
-                                   onChange={handleNamesInput(idx)}
-                                   error={clickedGenerate && !data['names'].value}
-                                   fullWidth
-                                   InputProps={{
-                                     endAdornment:
-                                       <InputAdornment position='end'>
-                                         {/*----- The last name has plus button, the others has minus buttons -----*/}
-                                         {
-                                           (idx === data['names'].value.length - 1 ?
-                                             <IconButton aria-label='add name' onClick={addName}>
-                                               <AddIcon fontSize='small' />
-                                             </IconButton>
-                                             :
-                                             <IconButton aria-label='remove name' onClick={removeName(idx)}>
-                                               <RemoveIcon fontSize='small' />
-                                             </IconButton>)
-                                         }
-                                       </InputAdornment>
-                                   }}
+                data['names'].value.map((name, index) =>
+                  <Grid item container key={index}>
+                    <TextField
+                      variant='outlined'
+                      name='names'
+                      value={name}
+                      onChange={changeName(index)}
+                      error={clickedGenerate && data['names'].value.length===0}
+                      fullWidth
+                      InputProps={{
+                        endAdornment:
+                          <InputAdornment position='end'>
+                            {/*----- The last name has plus button, the others has minus buttons -----*/}
+                            {
+                              (index === data['names'].value.length - 1 ?
+                                <IconButton aria-label='add name' onClick={addName}>
+                                  <AddIcon fontSize='small' />
+                                </IconButton>
+                                :
+                                <IconButton aria-label='remove name' onClick={removeName(index)}>
+                                  <RemoveIcon fontSize='small' />
+                                </IconButton>)
+                            }
+                          </InputAdornment>
+                      }}
                     />
                   </Grid>
                 )
               }
             </Grid>
           </Grid>
+
           {" "}
           {/*----- User interactions -----*/}
           <Grid item> {/*----- Button -----*/}
