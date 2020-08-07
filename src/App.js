@@ -19,6 +19,8 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import { makeStyles } from "@material-ui/core/styles";
 
+import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
+
 import { fetchGenerateCover } from "./api";
 
 const defaultData = {
@@ -52,12 +54,12 @@ const defaultData = {
   semester: {
     value: "",
     label: "Semestre",
-    options: ["Semestre I", "Semestre II", "Semestre II", "Semestre IV", "Semestre V"
+    options: ["Semestre I", "Semestre II", "Semestre III", "Semestre IV", "Semestre V"
       , "Semestre VI", "Semestre VII", "Semestre VIII", "Semestre IX", "Semestre X"
       , "Semestre XI", "Semestre XII", ""]
   },
   year: {
-    value: "2020-1",
+    value: "2020-2",
     label: "Año"
   },
   gender: {
@@ -128,7 +130,7 @@ const RadiosView = ({ data, field, handleRadioChange }) => (
 function App() {
   const classes = useStyles();
 
-  const [url, setUrl] = useState("Aquí aparecerá un link");
+  const [url, setUrl] = useState("");
   const [data, setData] = useState(defaultData);
 
   const [isFetchingCover, setIsFetchingCover] = useState(false);
@@ -196,7 +198,9 @@ function App() {
           <Grid item>
             <Typography variant='h5'>Carátulas UCSP</Typography>
           </Grid>
-          <Grid item className={classes.itemContainer}> {/*----- Career -----*/}
+          {" "}
+          {/*----- Career -----*/}
+          <Grid item className={classes.itemContainer}>
             <Autocomplete
               options={data['career'].options}
               value={data['career'].value}
@@ -207,17 +211,23 @@ function App() {
               }
             />
           </Grid>
-          <Grid item className={classes.itemContainer}> {/*----- Course -----*/}
+          {" "}
+          {/*----- Course -----*/}
+          <Grid item className={classes.itemContainer}>
             <TextFieldView name='course' value={data['course'].value} label={data['course'].label}
                            onChange={(event) => handleDataChange('course', event.target.value)}
                            error={clickedGenerate && !data['course'].value} />
           </Grid>
-          <Grid item className={classes.itemContainer}> {/*----- Work -----*/}
+          {" "}
+          {/*----- Work -----*/}
+          <Grid item className={classes.itemContainer}>
             <TextFieldView name='work' value={data['work'].value} label={data['work'].label}
                            onChange={(event) => handleDataChange('work', event.target.value)}
                            error={clickedGenerate && !data['work'].value} />
           </Grid>
-          <Grid item className={classes.itemContainer}> {/*----- Semester and Year -----*/}
+          {" "}
+          {/*----- Semester and Year -----*/}
+          <Grid item className={classes.itemContainer}>
             <Grid container spacing={1} direction='row'>
               <Grid item className={classes.semesterInput}>
                 <Autocomplete
@@ -237,41 +247,47 @@ function App() {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item className={classes.itemContainer}> {/*----- Gender -----*/}
+          {" "}
+          {/*----- Gender -----*/}
+          <Grid item className={classes.itemContainer}>
             <RadiosView classes={classes} field='gender' label={data['gender'].label}
                         data={data} handleRadioChange={(event) => handleDataChange('gender', event.target.value)} />
           </Grid>
 
-          <Grid item className={classes.itemContainer}> {/*----- Names -----*/}
+          {" "}
+          {/*----- Names -----*/}
+          <Grid item className={classes.itemContainer}>
             <FormLabel component='legend'>Integrantes</FormLabel>
             <div style={{ width: "100%", height: "0.5em" }} />
-            {
-              data['names'].value.map((name, idx) =>
-                <React.Fragment key={idx}>
-                  <TextFieldView name='names' value={name}
-                                 onChange={handleNamesInput(idx)}
-                                 error={clickedGenerate && !data['names'].value}
-                                 fullWidth
-                                 InputProps={{
-                                   endAdornment:
-                                     <InputAdornment position='end'>
-                                       {/*----- The last name has plus button, the others has minus butoton*/}
-                                       {
-                                         (idx === data['names'].value.length - 1 ?
-                                           <IconButton aria-label='add name' onClick={addName}>
-                                             <AddIcon fontSize='small' />
-                                           </IconButton>
-                                           :
-                                           <IconButton aria-label='remove name' onClick={removeName(idx)}>
-                                             <RemoveIcon fontSize='small' />
-                                           </IconButton>)
-                                       }
-                                     </InputAdornment>
-                                 }}
-                  />
-                </React.Fragment>
-              )
-            }
+            <Grid container spacing={1}>
+              {
+                data['names'].value.map((name, idx) =>
+                  <Grid item container key={idx}>
+                    <TextFieldView name='names' value={name}
+                                   onChange={handleNamesInput(idx)}
+                                   error={clickedGenerate && !data['names'].value}
+                                   fullWidth
+                                   InputProps={{
+                                     endAdornment:
+                                       <InputAdornment position='end'>
+                                         {/*----- The last name has plus button, the others has minus buttons -----*/}
+                                         {
+                                           (idx === data['names'].value.length - 1 ?
+                                             <IconButton aria-label='add name' onClick={addName}>
+                                               <AddIcon fontSize='small' />
+                                             </IconButton>
+                                             :
+                                             <IconButton aria-label='remove name' onClick={removeName(idx)}>
+                                               <RemoveIcon fontSize='small' />
+                                             </IconButton>)
+                                         }
+                                       </InputAdornment>
+                                   }}
+                    />
+                  </Grid>
+                )
+              }
+            </Grid>
           </Grid>
           {" "}
           {/*----- User interactions -----*/}
@@ -283,7 +299,9 @@ function App() {
           <Grid item> {/*----- Link -----*/}
             {
               !isFetchingCover ?
-                <a href={url}>{url}</a>
+                <IconButton href={url} target='_blank' disabled={!url} color='primary'>
+                  <PictureAsPdfIcon />
+                </IconButton>
                 :
                 <CircularProgress />
             }
