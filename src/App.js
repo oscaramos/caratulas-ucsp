@@ -15,6 +15,8 @@ import IconButton from "@material-ui/core/IconButton";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 import { makeStyles } from "@material-ui/core/styles";
 
 import Collapse from '@material-ui/core/Collapse'
@@ -111,6 +113,9 @@ function App() {
   const [isFetchingCover, setIsFetchingCover] = useState(false);
   const [clickedGenerate, setClickedGenerate] = useState(false);
 
+  const [openSnack, setOpenSnack] = useState(false);
+  const [messageSnack, setMessageSnack] = useState('');
+
   useEffect(() => {
     if(data.names.value.length > 1) {
       setCollapseGender(true)
@@ -139,9 +144,9 @@ function App() {
           setUrl(pdfUrl);
           setIsFetchingCover(false);
         })
-        .catch(() => {
-          alert("Error: Servidor posiblemente apagado\n" +
-            "Solución: Esperar de 1 a 2 minutos y volver a generar una carátula");
+        .catch((error) => {
+          setMessageSnack(`Error: ${error}`)
+          setOpenSnack(true)
           setIsFetchingCover(false);
         });
     }
@@ -193,6 +198,12 @@ function App() {
     })
   }
 
+  const handleCloseSnack = (event, reason) => {
+    if (reason !== 'clickaway') {
+      setOpenSnack(false);
+    }
+  };
+
   return (
     <Container maxWidth='xs' className={classes.root}>
       <Paper>
@@ -205,6 +216,8 @@ function App() {
           <Grid item>
             <Typography variant='h4'>Carátulas UCSP</Typography>
           </Grid>
+
+          <div style={{ width: '100%', height: '1em' }}/>
 
           {" "}
           {/*----- Career -----*/}
@@ -381,13 +394,37 @@ function App() {
                 <CircularProgress />
             }
           </Grid>
-          <Grid item>
-            <Typography variant="caption">
-              Intente hacerlo sin mouse
-            </Typography>
-          </Grid>
+
+          {" "}
+          {/*----- An message -----*/}
+          {
+            url?
+              <Grid item>
+                <Typography variant="caption">
+                  Intente hacerlo de nuevo sin mouse
+                </Typography>
+              </Grid>
+              :
+              null
+          }
         </Grid>
       </Paper>
+
+      {" "}
+      {/*----- Error Message Snack -----*/}
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        open={openSnack} onClose={handleCloseSnack}
+      >
+          <Alert
+            elevation={6}
+            variant="filled"
+            severity="error"
+            onClose={handleCloseSnack}
+          >
+            {messageSnack}
+          </Alert>
+      </Snackbar>
     </Container>
   );
 }
