@@ -261,6 +261,7 @@ function App() {
               getOptionLabel={option => option.name}
               inputValue={data['course'].value}
               onInputChange={(event, value) => handleDataChange('course', value)}
+              onChange={(event, value) => handleDataChange('semester', value.semester)}
               openOnFocus
               freeSolo
               renderInput={(params) =>
