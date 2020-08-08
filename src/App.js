@@ -27,6 +27,8 @@ import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 
 import { fetchGenerateCover } from "./api";
 
+import courses from './courses.json'
+
 const defaultData = {
   career: {
     value: "Ciencia de la Computación",
@@ -37,19 +39,27 @@ const defaultData = {
       "Arquitectura y Urbanismo",
       "Contabilidad",
       "Derecho",
-      "Educación inicial y primaria",
-      "Ingenieria Mecatronica",
-      "Ingenieria Civil",
-      "Ingenieria Electronica y Telecomunicaciones",
-      "Ingenieria Industrial",
-      "Psicologia",
-      "Sin carrera",
-      ""
+      "Educación Inicial",
+      "Educación Primaria",
+      "Ingeniería Ambiental",
+      "Ingeniería Civil",
+      "Ingeniería Electrónica y Telecomunicaciones",
+      "Ingeniería Industrial",
+      "Ingeniería Mecatrónica",
+      "Psicología"
     ]
   },
   course: {
     value: "",
-    label: "Curso"
+    label: "Curso",
+    options: {
+      get: (career) => {
+        if (courses[career]) {
+          return courses[career]
+        }
+        return []
+      }
+    }
   },
   work: {
     value: "",
@@ -224,9 +234,11 @@ function App() {
           <Grid item className={classes.itemContainer}>
             <Autocomplete
               options={data['career'].options}
-              value={data['career'].value}
-              onChange={(event, value) => handleDataChange('career', value)}
+              inputValue={data['career'].value}
+              onInputChange={(event, value) => handleDataChange('career', value)}
               openOnFocus
+              handleHomeEndKeys
+              freeSolo
               renderInput={(params) =>
                 <TextField
                   name='career'
@@ -243,14 +255,24 @@ function App() {
           {" "}
           {/*----- Course -----*/}
           <Grid item className={classes.itemContainer}>
-            <TextField
-              name='course'
-              variant='outlined'
-              value={data['course'].value}
-              label={data['course'].label}
-              onChange={(event) => handleDataChange('course', event.target.value)}
-              error={clickedGenerate && !data['course'].value}
-              fullWidth
+            <Autocomplete
+              options={data['course'].options.get(data.career.value)}
+              groupBy={option => option.semester}
+              getOptionLabel={option => option.name}
+              inputValue={data['course'].value}
+              onInputChange={(event, value) => handleDataChange('course', value)}
+              openOnFocus
+              freeSolo
+              renderInput={(params) =>
+                <TextField
+                  name='course'
+                  variant='outlined'
+                  label={data['course'].label}
+                  error={clickedGenerate && !data['course'].value}
+                  fullWidth
+                  {...params}
+                />
+              }
             />
           </Grid>
 
@@ -275,9 +297,10 @@ function App() {
               <Grid item className={classes.semesterInput}>
                 <Autocomplete
                   options={data['semester'].options}
-                  value={data['semester'].value}
-                  onChange={(event, value) => handleDataChange('semester', value)}
+                  inputValue={data['semester'].value}
+                  onInputChange={(event, value) => handleDataChange('semester', value)}
                   openOnFocus
+                  freeSolo
                   renderInput={(params) =>
                     <TextField
                       name='semester'
