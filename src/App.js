@@ -88,13 +88,15 @@ const defaultData = {
 };
 
 const useStyles = makeStyles(theme => ({
-  "@global": {
-    html: {
-      backgroundColor: theme.palette.background.default
-    }
-  },
   root: {
-    marginTop: theme.spacing(8)
+    marginTop: theme.spacing(10),
+    padding: 0,
+    [theme.breakpoints.down("xs")]: {
+      width: '100%',
+      maxWidth: '100%',
+      marginLeft: 0,
+      marginRight: 0,
+    }
   },
   form: {
     paddingTop: theme.spacing(2),
@@ -224,7 +226,7 @@ function App() {
           {" "}
           {/*----- Header -----*/}
           <Grid item>
-            <Typography variant='h4'>Carátulas UCSP</Typography>
+            <Typography variant='h1'>Carátulas UCSP</Typography>
           </Grid>
 
           <div style={{ width: '100%', height: '1em' }}/>
@@ -403,6 +405,7 @@ function App() {
 
           {" "}
           {/*----- User interactions -----*/}
+          <div style={{ width: '100%', height: '2em' }}/>
           <Grid item> {/*----- Button -----*/}
             <Button variant='contained' color='primary' onClick={() => generateCover()}>
               Generar Caratula
