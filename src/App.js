@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import ReactGA from 'react-ga';
 
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -28,6 +29,8 @@ import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 import { fetchGenerateCover } from "./api";
 
 import courses from './courses.json'
+
+ReactGA.initialize('UA-160924990-2');
 
 const defaultData = {
   career: {
@@ -136,6 +139,11 @@ function App() {
     }
   }, [data])
 
+  useEffect(() => {
+    // Mark page as visited by Google Analytics
+    ReactGA.pageview(window.location.pathname + window.location.search);
+  }, [])
+
   const generateCover = () => {
     const convertToDataApi = data =>
       Object.keys(data).reduce((prev, key) => {
@@ -147,6 +155,11 @@ function App() {
       const empties = Object.values(convertToDataApi(data)).filter(val => !val);
       return empties.length === 0;
     };
+
+    ReactGA.event({
+      category: 'User',
+      action: 'Generate an Cover'
+    })
 
     setClickedGenerate(true);
     if (allFieldsAreFilled()) {
@@ -215,6 +228,15 @@ function App() {
       setOpenSnack(false);
     }
   };
+
+  const handleDownloadCover = () => {
+    // This might me useless when the event 'Generate Cover' is done but anyway i'll do it
+    // I'll check the radio between Generated covers and the Downloaded covers
+    ReactGA.event({
+      category: 'User',
+      action: 'Download the generated Cover'
+    })
+  }
 
   return (
     <Container maxWidth='xs' className={classes.root}>
@@ -414,7 +436,7 @@ function App() {
           <Grid item> {/*----- Link -----*/}
             {
               !isFetchingCover ?
-                <IconButton href={url} target='_blank' disabled={!url} color='primary'>
+                <IconButton href={url} onClick={handleDownloadCover} target='_blank' disabled={!url} color='primary'>
                   <PictureAsPdfIcon />
                 </IconButton>
                 :
