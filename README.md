@@ -1,5 +1,5 @@
 <a href="https://oscaramos.github.io/caratulas-ucsp/">
-    <img src="./public/android-chrome-192x192.png" alt="Caratulas Logo" title="Caratulas" align="right" height="60" />
+    <img src="./public/android-chrome-192x192.png" alt="Caratulas Logo" title="Caratulas" height="60" />
 </a>
 
 
