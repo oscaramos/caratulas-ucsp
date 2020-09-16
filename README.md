@@ -1,10 +1,9 @@
-<a href="https://oscaramos.github.io/caratulas-ucsp/">
-    <img src="./public/android-chrome-192x192.png" alt="Caratulas Logo" title="Caratulas" height="60" />
-</a>
-
-
-Carátulas UCSP
-==============
+<h1 style="font-weight:normal">
+    <a href="https://oscaramos.github.io/caratulas-ucsp/">
+        <img src="./public/android-chrome-192x192.png" alt="Caratulas Logo" title="Caratulas" height="60" />
+    </a>
+    Carátulas UCSP
+</h1>
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/oscaramos/caratulas-ucsp/graphs/commit-activity)
 [![Website shields.io](https://img.shields.io/website-up-down-green-red/http/oscaramos.github.io/caratulas-ucsp)](https://oscaramos.github.io/caratulas-ucsp/)
