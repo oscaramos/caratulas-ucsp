@@ -1,8 +1,8 @@
 <h1 style="font-weight:normal">
-    <a href="https://oscaramos.github.io/caratulas-ucsp/">
-        <img src="./public/android-chrome-192x192.png" alt="Caratulas Logo" title="Caratulas" height="60" />
-    </a>
     Carátulas UCSP
+    <a href="https://oscaramos.github.io/caratulas-ucsp/">
+        <img src="./public/android-chrome-192x192.png" alt="Caratulas Logo" title="Caratulas" height="50" />
+    </a>
 </h1>
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/oscaramos/caratulas-ucsp/graphs/commit-activity)
