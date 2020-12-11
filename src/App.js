@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ReactGA from "react-ga";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -13,7 +14,6 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormLabel from "@material-ui/core/FormLabel";
 import FormControl from "@material-ui/core/FormControl";
 import IconButton from "@material-ui/core/IconButton";
-import Autocomplete from "@material-ui/lab/Autocomplete";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Snackbar from "@material-ui/core/Snackbar";
@@ -29,6 +29,7 @@ import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
 import { fetchGenerateCover } from "./api";
 
 import courses from "./courses.json";
+import ControlledAutocomplete from "./ControlledAutocomplete";
 
 ReactGA.initialize("UA-160924990-2");
 
@@ -102,29 +103,24 @@ function App() {
   const classes = useStyles();
 
   const [url, setUrl] = useState("");
-  const [data, setData] = useState({
-    career: {
-      value: "Ciencia de la Computación",
-    },
-    course: {
-      value: "",
-    },
-    work: {
-      value: "",
-    },
-    semester: {
-      value: "",
-    },
-    year: {
-      value: "2020-2",
-    },
-    gender: {
-      value: "M",
-    },
-    names: {
-      value: [""],
+
+  const { register, watch, errors, getValues, control } = useForm({
+    defaultValues: {
+      work: "",
+      career: "",
+      course: "",
+      semester: "",
+      year: "2021-1",
+      members: [{ name: "" }],
     },
   });
+  const career = watch("career");
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "members",
+  });
+
   const [collapseGender, setCollapseGender] = useState(false);
 
   const [isFetchingCover, setIsFetchingCover] = useState(false);
@@ -133,13 +129,13 @@ function App() {
   const [openSnack, setOpenSnack] = useState(false);
   const [messageSnack, setMessageSnack] = useState("");
 
-  useEffect(() => {
-    if (data.names.value.length > 1) {
-      setCollapseGender(true);
-    } else {
-      setCollapseGender(false);
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data.names.value.length > 1) {
+  //     setCollapseGender(true);
+  //   } else {
+  //     setCollapseGender(false);
+  //   }
+  // }, [data]);
 
   useEffect(() => {
     // Mark page as visited by Google Analytics
@@ -147,17 +143,11 @@ function App() {
   }, []);
 
   const generateCover = () => {
-    const convertToDataApi = (data) =>
-      Object.keys(data).reduce((prev, key) => {
-        prev[key] = data[key].value;
-        return prev;
-      }, {});
-
-    const allFieldsAreFilled = () => {
-      const empties = Object.values(convertToDataApi(data)).filter(
-        (val) => !val
-      );
-      return empties.length === 0;
+    const values = getValues();
+    const data = {
+      ...values,
+      names: values.members.map((obj) => obj.name),
+      course: values.course.name,
     };
 
     ReactGA.event({
@@ -166,65 +156,17 @@ function App() {
     });
 
     setClickedGenerate(true);
-    if (allFieldsAreFilled()) {
-      setIsFetchingCover(true);
-      fetchGenerateCover(convertToDataApi(data))
-        .then((pdfUrl) => {
-          setUrl(pdfUrl);
-          setIsFetchingCover(false);
-        })
-        .catch((error) => {
-          setMessageSnack(`Error: ${error}`);
-          setOpenSnack(true);
-          setIsFetchingCover(false);
-        });
-    }
-  };
-
-  const handleDataChange = (field, value) => {
-    setData({
-      ...data,
-      [field]: {
-        ...data[field],
-        value,
-      },
-    });
-  };
-
-  const changeName = (index) => (event) => {
-    const changeNameFromData = (value) => {
-      const newValues = [...value];
-      newValues[index] = event.target.value;
-      return newValues;
-    };
-
-    setData({
-      ...data,
-      names: {
-        ...data.names,
-        value: changeNameFromData(data.names.value),
-      },
-    });
-  };
-
-  const addName = () => {
-    setData({
-      ...data,
-      names: {
-        ...data.names,
-        value: [...data.names.value, ""],
-      },
-    });
-  };
-
-  const removeName = (indexToRemove) => () => {
-    setData({
-      ...data,
-      names: {
-        ...data.names,
-        value: data.names.value.filter((_, idx) => idx !== indexToRemove),
-      },
-    });
+    setIsFetchingCover(true);
+    fetchGenerateCover(data)
+      .then((pdfUrl) => {
+        setUrl(pdfUrl);
+        setIsFetchingCover(false);
+      })
+      .catch((error) => {
+        setMessageSnack(`Error: ${error}`);
+        setOpenSnack(true);
+        setIsFetchingCover(false);
+      });
   };
 
   const handleCloseSnack = (event, reason) => {
@@ -265,52 +207,47 @@ function App() {
           <div style={{ width: "100%", height: "1em" }} />{" "}
           {/*----- Career -----*/}
           <Grid item className={classes.itemContainer}>
-            <Autocomplete
+            <ControlledAutocomplete
+              control={control}
+              name="career"
               options={careerOptions}
-              inputValue={data["career"].value}
-              onInputChange={(event, value) =>
-                handleDataChange("career", value)
-              }
-              openOnFocus
-              handleHomeEndKeys
-              freeSolo
               renderInput={(params) => (
                 <TextField
                   name="career"
                   variant="outlined"
                   label="Carrera"
-                  error={clickedGenerate && !data["career"].value}
+                  // error={clickedGenerate && !data["career"].value}
                   fullWidth
                   {...params}
                 />
               )}
+              defaultValue={null}
+              openOnFocus
+              handleHomeEndKeys
+              freeSolo
             />
           </Grid>{" "}
           {/*----- Course -----*/}
           <Grid item className={classes.itemContainer}>
-            <Autocomplete
-              options={getCourses(data.career.value)}
+            <ControlledAutocomplete
+              control={control}
+              name="course"
+              options={getCourses(career)}
               groupBy={(option) => option.semester}
-              getOptionLabel={(option) => option.name}
-              inputValue={data["course"].value}
-              onInputChange={(event, value) =>
-                handleDataChange("course", value)
-              }
-              onChange={(event, value) =>
-                handleDataChange("semester", value.semester)
-              }
-              openOnFocus
-              freeSolo
+              getOptionLabel={(option) => option?.name ?? ""}
               renderInput={(params) => (
                 <TextField
                   name="course"
                   variant="outlined"
                   label="Curso"
-                  error={clickedGenerate && !data["course"].value}
+                  // error={clickedGenerate && !data["course"].value}
                   fullWidth
                   {...params}
                 />
               )}
+              defaultValue={null}
+              openOnFocus
+              freeSolo
             />
           </Grid>{" "}
           {/*----- Work -----*/}
@@ -318,10 +255,9 @@ function App() {
             <TextField
               name="work"
               variant="outlined"
-              value={data["work"].value}
               label="Nombre del trabajo"
-              onChange={(event) => handleDataChange("work", event.target.value)}
-              error={clickedGenerate && !data["work"].value}
+              // error={clickedGenerate && !data["work"].value}
+              inputRef={register}
               fullWidth
             />
           </Grid>{" "}
@@ -329,36 +265,32 @@ function App() {
           <Grid item className={classes.itemContainer}>
             <Grid container spacing={1} direction="row">
               <Grid item className={classes.semesterInput}>
-                <Autocomplete
+                <ControlledAutocomplete
+                  control={control}
+                  name="semester"
                   options={semesterOptions}
-                  inputValue={data["semester"].value}
-                  onInputChange={(event, value) =>
-                    handleDataChange("semester", value)
-                  }
-                  openOnFocus
-                  freeSolo
                   renderInput={(params) => (
                     <TextField
                       name="semester"
                       variant="outlined"
                       label="Semestre"
-                      error={clickedGenerate && !data["semester"].value}
+                      // error={clickedGenerate && !data["semester"].value}
                       fullWidth
                       {...params}
                     />
                   )}
+                  defaultValue={null}
+                  openOnFocus
+                  freeSolo
                 />
               </Grid>
               <Grid item className={classes.yearInput}>
                 <TextField
                   name="year"
                   variant="outlined"
-                  value={data["year"].value}
                   label="Año"
-                  onChange={(event) =>
-                    handleDataChange("year", event.target.value)
-                  }
-                  error={clickedGenerate && !data["year"].value}
+                  // error={clickedGenerate && !data["year"].value}
+                  inputRef={register}
                   fullWidth
                 />
               </Grid>
@@ -369,31 +301,31 @@ function App() {
             <Collapse in={!collapseGender}>
               <FormControl component="fieldset">
                 <FormLabel component="legend">Género</FormLabel>
-                <RadioGroup
-                  row
-                  aria-label="Género"
-                  value={data["gender"].value}
-                  onChange={(event) =>
-                    handleDataChange("gender", event.target.value)
+                <Controller
+                  name="gender"
+                  control={control}
+                  defaultValue="M"
+                  as={
+                    <RadioGroup row aria-label="Género">
+                      <FormControlLabel
+                        name="gender"
+                        key="M"
+                        value="M"
+                        label="Masculino"
+                        style={{ marginRight: "1.25em" }}
+                        control={<Radio color="primary" />}
+                      />
+                      <FormControlLabel
+                        name="gender"
+                        key="F"
+                        value="F"
+                        label="Femenino"
+                        style={{ marginRight: "1.25em" }}
+                        control={<Radio color="primary" />}
+                      />
+                    </RadioGroup>
                   }
-                >
-                  <FormControlLabel
-                    name="gender"
-                    key="M"
-                    value="M"
-                    label="Masculino"
-                    style={{ marginRight: "1.25em" }}
-                    control={<Radio color="primary" />}
-                  />
-                  <FormControlLabel
-                    name="gender"
-                    key="F"
-                    value="F"
-                    label="Femenino"
-                    style={{ marginRight: "1.25em" }}
-                    control={<Radio color="primary" />}
-                  />
-                </RadioGroup>
+                />
               </FormControl>
             </Collapse>
           </Grid>{" "}
@@ -402,42 +334,50 @@ function App() {
             <FormLabel component="legend">Integrantes</FormLabel>
             <div style={{ width: "100%", height: "0.5em" }} />
             <Grid container spacing={1}>
-              {data["names"].value.map((name, index) => (
-                <Grid item container key={index}>
-                  <TextField
-                    variant="outlined"
-                    name="names"
-                    value={name}
-                    onChange={changeName(index)}
-                    autoFocus={true}
-                    onKeyDown={(keyEvent) => {
-                      if (keyEvent.ctrlKey && keyEvent.key === "Enter") {
-                        generateCover();
-                      } else if (keyEvent.key === "Enter") {
-                        addName();
-                      }
-                    }}
-                    error={clickedGenerate && data["names"].value.length === 0}
-                    fullWidth
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          {/*----- The last name has plus button, the others has minus buttons -----*/}
-                          {index === data["names"].value.length - 1 ? (
-                            <IconButton aria-label="add name" onClick={addName}>
-                              <AddIcon fontSize="small" />
-                            </IconButton>
-                          ) : (
-                            <IconButton
-                              aria-label="remove name"
-                              onClick={removeName(index)}
-                            >
-                              <RemoveIcon fontSize="small" />
-                            </IconButton>
-                          )}
-                        </InputAdornment>
-                      ),
-                    }}
+              {fields.map((item, index) => (
+                <Grid item container key={item.id}>
+                  <Controller
+                    name={`members[${index}].name`}
+                    control={control}
+                    defaultValue={item.name}
+                    as={
+                      <TextField
+                        variant="outlined"
+                        name="names"
+                        autoFocus={true}
+                        onKeyDown={(keyEvent) => {
+                          if (keyEvent.ctrlKey && keyEvent.key === "Enter") {
+                            generateCover();
+                          } else if (keyEvent.key === "Enter") {
+                            append({ name: "" });
+                          }
+                        }}
+                        // error={clickedGenerate && data["names"].value.length === 0}
+                        fullWidth
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              {/*----- The last name has plus button, the others has minus buttons -----*/}
+                              {index === fields.length - 1 ? (
+                                <IconButton
+                                  aria-label="add name"
+                                  onClick={() => append({ name: "" })}
+                                >
+                                  <AddIcon fontSize="small" />
+                                </IconButton>
+                              ) : (
+                                <IconButton
+                                  aria-label="remove name"
+                                  onClick={() => remove(index)}
+                                >
+                                  <RemoveIcon fontSize="small" />
+                                </IconButton>
+                              )}
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    }
                   />
                 </Grid>
               ))}
@@ -473,14 +413,6 @@ function App() {
               <CircularProgress />
             )}
           </Grid>{" "}
-          {/*----- An message -----*/}
-          {url ? (
-            <Grid item>
-              <Typography variant="caption">
-                Intente hacerlo de nuevo sin mouse
-              </Typography>
-            </Grid>
-          ) : null}
         </Grid>
       </Paper>{" "}
       {/*----- Error Message Snack -----*/}
