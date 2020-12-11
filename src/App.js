@@ -32,63 +32,43 @@ import courses from './courses.json'
 
 ReactGA.initialize('UA-160924990-2');
 
-const defaultData = {
-  career: {
-    value: "Ciencia de la Computación",
-    label: "Carrera",
-    options: [
-      "Ciencia de la Computación",
-      "Administración de Empresas",
-      "Arquitectura y Urbanismo",
-      "Contabilidad",
-      "Derecho",
-      "Educación Inicial",
-      "Educación Primaria",
-      "Ingeniería Ambiental",
-      "Ingeniería Civil",
-      "Ingeniería Electrónica y Telecomunicaciones",
-      "Ingeniería Industrial",
-      "Ingeniería Mecatrónica",
-      "Psicología"
-    ]
-  },
-  course: {
-    value: "",
-    label: "Curso",
-    options: {
-      get: (career) => {
-        if (courses[career]) {
-          return courses[career]
-        }
-        return []
-      }
-    }
-  },
-  work: {
-    value: "",
-    label: "Nombre del trabajo"
-  },
-  semester: {
-    value: "",
-    label: "Semestre",
-    options: ["Semestre I", "Semestre II", "Semestre III", "Semestre IV", "Semestre V"
-      , "Semestre VI", "Semestre VII", "Semestre VIII", "Semestre IX", "Semestre X"
-      , "Semestre XI", "Semestre XII", ""]
-  },
-  year: {
-    value: "2020-2",
-    label: "Año"
-  },
-  gender: {
-    value: "M",
-    radio: { "M": "Masculino", "F": "Femenino" },
-    label: "Género"
-  },
-  names: {
-    value: [""],
-    label: "Integrantes"
+const careerOptions = [
+  "Ciencia de la Computación",
+  "Administración de Empresas",
+  "Arquitectura y Urbanismo",
+  "Contabilidad",
+  "Derecho",
+  "Educación Inicial",
+  "Educación Primaria",
+  "Ingeniería Ambiental",
+  "Ingeniería Civil",
+  "Ingeniería Electrónica y Telecomunicaciones",
+  "Ingeniería Industrial",
+  "Ingeniería Mecatrónica",
+  "Psicología"
+]
+
+const semesterOptions = [
+  "Semestre I",
+  "Semestre II",
+  "Semestre III",
+  "Semestre IV",
+  "Semestre V",
+  "Semestre VI",
+  "Semestre VII",
+  "Semestre VIII",
+  "Semestre IX",
+  "Semestre X",
+  "Semestre XI",
+  "Semestre XII"
+]
+
+const getCourses = (career) => {
+  if (courses[career]) {
+    return courses[career]
   }
-};
+  return []
+}
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -122,7 +102,29 @@ function App() {
   const classes = useStyles();
 
   const [url, setUrl] = useState("");
-  const [data, setData] = useState(defaultData);
+  const [data, setData] = useState({
+    career: {
+      value: "Ciencia de la Computación",
+    },
+    course: {
+      value: "",
+    },
+    work: {
+      value: "",
+    },
+    semester: {
+      value: ""
+    },
+    year: {
+      value: "2020-2",
+    },
+    gender: {
+      value: "M"
+    },
+    names: {
+      value: [""],
+    }
+  });
   const [collapseGender, setCollapseGender] = useState(false);
 
   const [isFetchingCover, setIsFetchingCover] = useState(false);
@@ -257,7 +259,7 @@ function App() {
           {/*----- Career -----*/}
           <Grid item className={classes.itemContainer}>
             <Autocomplete
-              options={data['career'].options}
+              options={careerOptions}
               inputValue={data['career'].value}
               onInputChange={(event, value) => handleDataChange('career', value)}
               openOnFocus
@@ -267,7 +269,7 @@ function App() {
                 <TextField
                   name='career'
                   variant='outlined'
-                  label={data['career'].label}
+                  label='Carrera'
                   error={clickedGenerate && !data['career'].value}
                   fullWidth
                   {...params}
@@ -280,7 +282,7 @@ function App() {
           {/*----- Course -----*/}
           <Grid item className={classes.itemContainer}>
             <Autocomplete
-              options={data['course'].options.get(data.career.value)}
+              options={getCourses(data.career.value)}
               groupBy={option => option.semester}
               getOptionLabel={option => option.name}
               inputValue={data['course'].value}
@@ -292,7 +294,7 @@ function App() {
                 <TextField
                   name='course'
                   variant='outlined'
-                  label={data['course'].label}
+                  label='Curso'
                   error={clickedGenerate && !data['course'].value}
                   fullWidth
                   {...params}
@@ -308,7 +310,7 @@ function App() {
               name='work'
               variant='outlined'
               value={data['work'].value}
-              label={data['work'].label}
+              label='Nombre del trabajo'
               onChange={(event) => handleDataChange('work', event.target.value)}
               error={clickedGenerate && !data['work'].value}
               fullWidth
@@ -321,7 +323,7 @@ function App() {
             <Grid container spacing={1} direction='row'>
               <Grid item className={classes.semesterInput}>
                 <Autocomplete
-                  options={data['semester'].options}
+                  options={semesterOptions}
                   inputValue={data['semester'].value}
                   onInputChange={(event, value) => handleDataChange('semester', value)}
                   openOnFocus
@@ -330,7 +332,7 @@ function App() {
                     <TextField
                       name='semester'
                       variant='outlined'
-                      label={data['semester'].label}
+                      label='Semestre'
                       error={clickedGenerate && !data['semester'].value}
                       fullWidth
                       {...params}
@@ -343,7 +345,7 @@ function App() {
                   name='year'
                   variant='outlined'
                   value={data['year'].value}
-                  label={data['year'].label}
+                  label='Año'
                   onChange={(event) => handleDataChange('year', event.target.value)}
                   error={clickedGenerate && !data['year'].value}
                   fullWidth
@@ -357,21 +359,25 @@ function App() {
           <Grid item className={classes.itemContainer}>
             <Collapse in={!collapseGender}>
               <FormControl component='fieldset'>
-                <FormLabel component='legend'>{data['gender'].label}</FormLabel>
-                <RadioGroup row aria-label={data['gender'].label} value={data['gender'].value}
+                <FormLabel component='legend'>Género</FormLabel>
+                <RadioGroup row aria-label="Género" value={data['gender'].value}
                             onChange={(event) => handleDataChange('gender', event.target.value)}>
-                  {
-                    Object.entries(data['gender'].radio).map(([key, label]) => (
-                      <FormControlLabel
-                        name='gender'
-                        key={key}
-                        value={key}
-                        label={label}
-                        style={{ marginRight: '1.25em' }}
-                        control={<Radio color='primary' />}
-                      />
-                    ))
-                  }
+                  <FormControlLabel
+                    name='gender'
+                    key="M"
+                    value="M"
+                    label="Masculino"
+                    style={{ marginRight: '1.25em' }}
+                    control={<Radio color='primary' />}
+                  />
+                  <FormControlLabel
+                    name='gender'
+                    key="F"
+                    value="F"
+                    label="Femenino"
+                    style={{ marginRight: '1.25em' }}
+                    control={<Radio color='primary' />}
+                  />
                 </RadioGroup>
               </FormControl>
             </Collapse>
