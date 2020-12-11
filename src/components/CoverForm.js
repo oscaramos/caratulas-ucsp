@@ -19,8 +19,8 @@ import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import Button from "@material-ui/core/Button";
 
-import ControlledAutocomplete from "../ControlledAutocomplete";
-import courses from "../courses.json";
+import ControlledAutocomplete from "./ControlledAutocomplete";
+import courses from "../assets/courses.json";
 
 const careerOptions = [
   "Ciencia de la Computación",

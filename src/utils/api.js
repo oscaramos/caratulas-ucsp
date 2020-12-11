@@ -1,7 +1,6 @@
 const apiUrl = "https://caratulas-ucsp-api-proxy.vercel.app/api/cover";
 
 export const fetchGenerateCover = (data) => {
-  console.log(data);
   const options = {
     method: "POST",
     body: JSON.stringify(data),
