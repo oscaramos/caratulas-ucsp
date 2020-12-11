@@ -13,8 +13,7 @@
 ![GitHub forks](https://img.shields.io/github/forks/oscaramos/caratulas-ucsp)
 ![Repo size](https://img.shields.io/github/repo-size/oscaramos/caratulas-ucsp)
 
-
-Aplicación web sobre generación de caratulas de la Universidad Católica San Pablo(UCSP) 
+Aplicación web sobre generación de caratulas de la Universidad Católica San Pablo(UCSP)
 Puede explorar el back-end [aquí](https://github.com/oscaramos/caratulas-ucsp-api)
 
 Si hubiese algún error o se les ocurre alguna mejora usar la sección de Issues o aún mejor hacer un Pull Request.
@@ -24,26 +23,28 @@ Si hubiese algún error o se les ocurre alguna mejora usar la sección de Issues
 La página esta desplegada con [Github Pages](https://pages.github.com/) y se encuentra [aquí](https://oscaramos.github.io/caratulas-ucsp/)
 
 # Herramientas
-* [React](https://es.reactjs.org/) - Framework base
-* [Material-UI](https://material-ui.com/) - Componentes para la interfaz de usuario
-* [Github Pages](https://pages.github.com/) - Despliegue y Hosting de la página
-* [Google Analytics](https://analytics.google.com/analytics/web/#/) - Para medir el trafico
+
+- [React](https://es.reactjs.org/) - Framework base
+- [Material-UI](https://material-ui.com/) - Componentes para la interfaz de usuario
+- [Github Pages](https://pages.github.com/) - Despliegue y Hosting de la página
+- [Google Analytics](https://analytics.google.com/analytics/web/#/) - Para medir el trafico
 
 # Características
-* Formulario agradable a la vista, fácil de usar
-* Aplicación responsive para que luzca bien en todas las pantallas
-* Carátulas generadas en latex para mejor visualización de la caratula
-* Aplicación instalable en computadoras de escritorio y teléfonos celulares ([PWA](https://www.xataka.com/basics/que-es-una-aplicacion-web-progresiva-o-pwa))
-* Uso de las últimas tecnologías en el mercado ([React](https://es.reactjs.org/), [Docker](https://www.docker.com/))
-* Autocompletado de carreras, cursos y semestre
-* Agregado de multiples personas(Probado hasta 8)
-* Mantenimiento disponible durante todo el tiempo libre que tenga
+
+- Formulario agradable a la vista, fácil de usar
+- Aplicación responsive para que luzca bien en todas las pantallas
+- Carátulas generadas en latex para mejor visualización de la caratula
+- Aplicación instalable en computadoras de escritorio y teléfonos celulares ([PWA](https://www.xataka.com/basics/que-es-una-aplicacion-web-progresiva-o-pwa))
+- Uso de las últimas tecnologías en el mercado ([React](https://es.reactjs.org/), [Docker](https://www.docker.com/))
+- Autocompletado de carreras, cursos y semestre
+- Agregado de multiples personas(Probado hasta 8)
+- Mantenimiento disponible durante todo el tiempo libre que tenga
 
 # Trabajos futuros
+
 Progresare estos trabajos dependiendo de cuanta demanda haya por estos
 
-* Agregar una guía de como instalar la aplicación en su dispositivo
-* Colocar enlaces que lleven de la aplicación hacia los repositorios para los desarrolladores interesados
-* Agregar multiples plantillas de caratulas para escoger
-* Generar carátulas para otras Universidades (San agustin? La Cato?)
-
+- Agregar una guía de como instalar la aplicación en su dispositivo
+- Colocar enlaces que lleven de la aplicación hacia los repositorios para los desarrolladores interesados
+- Agregar multiples plantillas de caratulas para escoger
+- Generar carátulas para otras Universidades (San agustin? La Cato?)
