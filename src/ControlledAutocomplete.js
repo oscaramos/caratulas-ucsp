@@ -11,16 +11,20 @@ export default function ControlledAutocomplete({
   defaultValue,
   name,
   renderOption,
+  rules,
   ...moreProps
 }) {
   return (
     <Controller
-      render={({ onChange, ...props }) => (
+      render={({ onChange, value, ...props }) => (
         <Autocomplete
           options={options}
           renderOption={renderOption}
           renderInput={renderInput}
-          onChange={(e, data) => onChange(data)}
+          inputValue={value ?? ""}
+          onInputChange={(e, data) => {
+            onChange(data);
+          }}
           {...props}
           {...moreProps}
         />
@@ -29,6 +33,7 @@ export default function ControlledAutocomplete({
       defaultValue={defaultValue}
       name={name}
       control={control}
+      rules={rules}
     />
   );
 }

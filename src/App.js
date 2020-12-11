@@ -105,6 +105,7 @@ function App() {
   const [url, setUrl] = useState("");
 
   const { register, watch, errors, getValues, control } = useForm({
+    mode: "onBlur",
     defaultValues: {
       work: "",
       career: "",
@@ -121,21 +122,10 @@ function App() {
     name: "members",
   });
 
-  const [collapseGender, setCollapseGender] = useState(false);
-
   const [isFetchingCover, setIsFetchingCover] = useState(false);
-  const [clickedGenerate, setClickedGenerate] = useState(false);
 
   const [openSnack, setOpenSnack] = useState(false);
   const [messageSnack, setMessageSnack] = useState("");
-
-  // useEffect(() => {
-  //   if (data.names.value.length > 1) {
-  //     setCollapseGender(true);
-  //   } else {
-  //     setCollapseGender(false);
-  //   }
-  // }, [data]);
 
   useEffect(() => {
     // Mark page as visited by Google Analytics
@@ -155,16 +145,16 @@ function App() {
       action: "Generate an Cover",
     });
 
-    setClickedGenerate(true);
     setIsFetchingCover(true);
     fetchGenerateCover(data)
       .then((pdfUrl) => {
         setUrl(pdfUrl);
-        setIsFetchingCover(false);
       })
       .catch((error) => {
         setMessageSnack(`Error: ${error}`);
         setOpenSnack(true);
+      })
+      .finally(() => {
         setIsFetchingCover(false);
       });
   };
@@ -176,12 +166,10 @@ function App() {
   };
 
   const handleDownloadCover = () => {
-    // This might me useless when the event 'Generate Cover' is done but anyway i'll do it
-    // I'll check the radio between Generated covers and the Downloaded covers
-    ReactGA.event({
-      category: "User",
-      action: "Download the generated Cover",
-    });
+    // ReactGA.event({
+    //   category: "User",
+    //   action: "Download the generated Cover",
+    // });
   };
 
   return (
@@ -216,14 +204,14 @@ function App() {
                   name="career"
                   variant="outlined"
                   label="Carrera"
-                  // error={clickedGenerate && !data["career"].value}
+                  error={!!errors.career}
                   fullWidth
                   {...params}
                 />
               )}
+              rules={{ required: true }}
               defaultValue={null}
               openOnFocus
-              handleHomeEndKeys
               freeSolo
             />
           </Grid>{" "}
@@ -240,11 +228,12 @@ function App() {
                   name="course"
                   variant="outlined"
                   label="Curso"
-                  // error={clickedGenerate && !data["course"].value}
+                  error={!!errors.course}
                   fullWidth
                   {...params}
                 />
               )}
+              rules={{ required: true }}
               defaultValue={null}
               openOnFocus
               freeSolo
@@ -256,8 +245,8 @@ function App() {
               name="work"
               variant="outlined"
               label="Nombre del trabajo"
-              // error={clickedGenerate && !data["work"].value}
-              inputRef={register}
+              error={!!errors.work}
+              inputRef={register({ required: true })}
               fullWidth
             />
           </Grid>{" "}
@@ -274,11 +263,12 @@ function App() {
                       name="semester"
                       variant="outlined"
                       label="Semestre"
-                      // error={clickedGenerate && !data["semester"].value}
+                      error={!!errors.semester}
                       fullWidth
                       {...params}
                     />
                   )}
+                  rules={{ required: true }}
                   defaultValue={null}
                   openOnFocus
                   freeSolo
@@ -289,8 +279,8 @@ function App() {
                   name="year"
                   variant="outlined"
                   label="Año"
-                  // error={clickedGenerate && !data["year"].value}
-                  inputRef={register}
+                  error={!!errors.year}
+                  inputRef={register({ required: true })}
                   fullWidth
                 />
               </Grid>
@@ -298,7 +288,7 @@ function App() {
           </Grid>{" "}
           {/*----- Gender -----*/}
           <Grid item className={classes.itemContainer}>
-            <Collapse in={!collapseGender}>
+            <Collapse in={fields.length === 1}>
               <FormControl component="fieldset">
                 <FormLabel component="legend">Género</FormLabel>
                 <Controller
