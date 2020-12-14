@@ -5,15 +5,19 @@ import * as serviceWorker from "./serviceWorker";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ThemeProvider } from "@material-ui/core/styles";
 
+import { ErrorSnackProvider } from "./hooks/useErrorSnack";
+
 import App from "./App";
 import theme from "./theme";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <App />
-    </ThemeProvider>
+    <ErrorSnackProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <App />
+      </ThemeProvider>
+    </ErrorSnackProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

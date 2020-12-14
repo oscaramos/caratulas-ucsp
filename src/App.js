@@ -16,8 +16,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
 
 import CoverForm from "./components/CoverForm";
-
-import { fetchGenerateCover } from "./utils/api";
+import { useErrorSnack } from "./hooks/useErrorSnack";
+import Button from "@material-ui/core/Button";
 
 ReactGA.initialize("UA-160924990-2");
 
@@ -47,8 +47,7 @@ function App() {
 
   const [isFetchingCover, setIsFetchingCover] = useState(false);
 
-  const [openSnack, setOpenSnack] = useState(false);
-  const [messageSnack, setMessageSnack] = useState("");
+  const { showError } = useErrorSnack();
 
   useEffect(() => {
     // ReactGA.pageview(window.location.pathname + window.location.search);
@@ -73,11 +72,11 @@ function App() {
       });
   };
 
-  const handleCloseSnack = (event, reason) => {
-    if (reason !== "clickaway") {
-      setOpenSnack(false);
+  useEffect(() => {
+    if (error) {
+      showError(`Error: ${error}`);
     }
-  };
+  }, [showError, error]);
 
   const handleDownloadCover = () => {
     // ReactGA.event({
@@ -115,21 +114,6 @@ function App() {
           </Grid>
         </Grid>
       </Paper>
-      {/*----- Error Message Snack -----*/}
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={openSnack}
-        onClose={handleCloseSnack}
-      >
-        <Alert
-          elevation={6}
-          variant="filled"
-          severity="error"
-          onClose={handleCloseSnack}
-        >
-          {messageSnack}
-        </Alert>
-      </Snackbar>
     </Container>
   );
 }
