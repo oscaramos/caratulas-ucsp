@@ -8,10 +8,9 @@ import {
   Grid,
   IconButton,
   CircularProgress,
-  Snackbar,
   Typography,
+  Collapse,
 } from "@material-ui/core";
-import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 
 import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
@@ -38,6 +37,17 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: "2em",
     paddingLeft: "10%",
     paddingRight: "10%",
+  },
+  wrapperSubmitButton: {
+    position: "relative",
+  },
+  buttonProgress: {
+    color: theme.palette.primary,
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
   },
 }));
 
@@ -85,7 +95,27 @@ function App() {
           </Grid>
 
           <Grid item container>
-            <CoverForm onSubmit={generateCover} />
+            <CoverForm
+              onSubmit={generateCover}
+              submitButton={(onClickGenerate, hasErrors) => (
+                <div className={classes.wrapperSubmitButton}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={onClickGenerate}
+                    disabled={loading || !!hasErrors}
+                  >
+                    Generar Carátula
+                  </Button>
+                  {loading && (
+                    <CircularProgress
+                      size={24}
+                      className={classes.buttonProgress}
+                    />
+                  )}
+                </div>
+              )}
+            />
           </Grid>
 
           <Grid item>

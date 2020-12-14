@@ -2,24 +2,24 @@ import React from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 
 import {
-  Grid,
-  IconButton,
-  TextField,
   Collapse,
   FormControl,
-  FormLabel,
-  RadioGroup,
   FormControlLabel,
-  Radio,
+  FormLabel,
+  Grid,
+  IconButton,
   InputAdornment,
+  Radio,
+  RadioGroup,
+  TextField,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
-import Button from "@material-ui/core/Button";
 
 import ControlledAutocomplete from "./ControlledAutocomplete";
+
 import courses from "../assets/courses.json";
 
 const careerOptions = [
@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CoverForm({ onSubmit }) {
+export default function CoverForm({ onSubmit, submitButton }) {
   const classes = useStyles();
 
   const { register, watch, errors, getValues, control } = useForm({
@@ -97,14 +97,18 @@ export default function CoverForm({ onSubmit }) {
     name: "members",
   });
 
+  const hasErrors = Object.values(errors).length > 0;
+
   const onClickGenerate = () => {
-    const values = getValues();
-    const data = {
-      ...values,
-      names: values.members.map((obj) => obj.name),
-      course: values.course.name,
-    };
-    onSubmit(data);
+    if (!hasErrors) {
+      const values = getValues();
+
+      onSubmit({
+        ...values,
+        names: values.members.map((obj) => obj.name),
+        course: values.course.name,
+      });
+    }
   };
 
   return (
@@ -130,11 +134,12 @@ export default function CoverForm({ onSubmit }) {
               variant="outlined"
               label="Carrera"
               error={!!errors.career}
+              helperText={errors?.career?.message}
               fullWidth
               {...params}
             />
           )}
-          rules={{ required: true }}
+          rules={{ required: "Escriba una carrera" }}
           defaultValue={null}
           openOnFocus
           freeSolo
@@ -154,11 +159,12 @@ export default function CoverForm({ onSubmit }) {
               variant="outlined"
               label="Curso"
               error={!!errors.course}
+              helperText={errors?.course?.message}
               fullWidth
               {...params}
             />
           )}
-          rules={{ required: true }}
+          rules={{ required: "Escriba un curso" }}
           defaultValue={null}
           openOnFocus
           freeSolo
@@ -171,7 +177,8 @@ export default function CoverForm({ onSubmit }) {
           variant="outlined"
           label="Nombre del trabajo"
           error={!!errors.work}
-          inputRef={register({ required: true })}
+          helperText={errors?.work?.message}
+          inputRef={register({ required: "Escriba el nombre de su trabajo" })}
           fullWidth
         />
       </Grid>
@@ -189,11 +196,12 @@ export default function CoverForm({ onSubmit }) {
                   variant="outlined"
                   label="Semestre"
                   error={!!errors.semester}
+                  helperText={errors?.semester?.message}
                   fullWidth
                   {...params}
                 />
               )}
-              rules={{ required: true }}
+              rules={{ required: "Escriba el semestre del curso" }}
               defaultValue={null}
               openOnFocus
               freeSolo
@@ -205,7 +213,10 @@ export default function CoverForm({ onSubmit }) {
               variant="outlined"
               label="Año"
               error={!!errors.year}
-              inputRef={register({ required: true })}
+              helperText={errors?.year?.message}
+              inputRef={register({
+                required: "Escriba el año y semestre del trabajo",
+              })}
               fullWidth
             />
           </Grid>
@@ -259,7 +270,8 @@ export default function CoverForm({ onSubmit }) {
                   <TextField
                     variant="outlined"
                     name="names"
-                    autoFocus={true}
+                    error={!!errors?.members?.[index]}
+                    helperText={errors?.members?.[index]?.name.message}
                     onKeyDown={(keyEvent) => {
                       if (keyEvent.ctrlKey && keyEvent.key === "Enter") {
                         onClickGenerate();
@@ -292,15 +304,14 @@ export default function CoverForm({ onSubmit }) {
                     }}
                   />
                 }
+                rules={{ required: "Escriba el nombre del integrante" }}
               />
             </Grid>
           ))}
         </Grid>
       </Grid>
       <Grid item style={{ marginTop: "2em" }}>
-        <Button variant="contained" color="primary" onClick={onClickGenerate}>
-          Generar Carátula
-        </Button>
+        {submitButton(onClickGenerate, hasErrors)}
       </Grid>
     </Grid>
   );
