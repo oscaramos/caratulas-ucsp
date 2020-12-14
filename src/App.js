@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ReactGA from "react-ga";
+import useFetch from "use-http";
 
 import {
   Container,
@@ -40,36 +41,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const apiUrl = "https://caratulas-ucsp-api-proxy.vercel.app/api/cover";
+
 function App() {
   const classes = useStyles();
 
   const [url, setUrl] = useState("");
 
-  const [isFetchingCover, setIsFetchingCover] = useState(false);
+  const { post, response, loading, error } = useFetch(apiUrl);
 
   const { showError } = useErrorSnack();
 
   useEffect(() => {
-    // ReactGA.pageview(window.location.pathname + window.location.search);
+    ReactGA.pageview(window.location.pathname + window.location.search);
   }, []);
 
-  const generateCover = (data) => {
-    // ReactGA.event({
-    //   category: "User",
-    //   action: "Generate an Cover",
-    // });
-    setIsFetchingCover(true);
-    fetchGenerateCover(data)
-      .then((pdfUrl) => {
-        setUrl(pdfUrl);
-      })
-      .catch((error) => {
-        setMessageSnack(`Error: ${error}`);
-        setOpenSnack(true);
-      })
-      .finally(() => {
-        setIsFetchingCover(false);
-      });
+  const generateCover = async (data) => {
+    const coverData = await post("/", data);
+    if (response.ok) {
+      setUrl(coverData.link);
+    }
   };
 
   useEffect(() => {
@@ -79,10 +70,10 @@ function App() {
   }, [showError, error]);
 
   const handleDownloadCover = () => {
-    // ReactGA.event({
-    //   category: "User",
-    //   action: "Download the generated Cover",
-    // });
+    ReactGA.event({
+      category: "User",
+      action: "Download the generated Cover",
+    });
   };
 
   return (
@@ -98,19 +89,17 @@ function App() {
           </Grid>
 
           <Grid item>
-            {!isFetchingCover ? (
+            <Collapse in={!!url}>
               <IconButton
                 href={url}
                 onClick={handleDownloadCover}
                 target="_blank"
-                disabled={!url}
+                hidden={!url}
                 color="primary"
               >
                 <PictureAsPdfIcon />
               </IconButton>
-            ) : (
-              <CircularProgress />
-            )}
+            </Collapse>
           </Grid>
         </Grid>
       </Paper>
