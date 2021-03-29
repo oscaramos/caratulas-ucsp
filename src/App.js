@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ReactGA from "react-ga";
 import useFetch from "use-http";
+import GithubCorner from "react-github-corner";
 
 import {
   Container,
@@ -133,6 +134,8 @@ function App() {
           </Grid>
         </Grid>
       </Paper>
+
+      <GithubCorner href="https://github.com/oscaramos/caratulas-ucsp" size={80} />
     </Container>
   );
 }
