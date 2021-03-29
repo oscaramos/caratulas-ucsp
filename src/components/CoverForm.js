@@ -106,7 +106,7 @@ export default function CoverForm({ onSubmit, submitButton }) {
       onSubmit({
         ...values,
         names: values.members.map((obj) => obj.name),
-        course: values.course.name,
+        course: values.course,
       });
     }
   };
