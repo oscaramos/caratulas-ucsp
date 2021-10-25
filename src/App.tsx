@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ComponentProps, useEffect, useState } from "react";
 import ReactGA from "react-ga";
 import useFetch from "use-http";
 import GithubCorner from "react-github-corner";
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
   },
   buttonProgress: {
-    color: theme.palette.primary,
+    color: theme.palette.primary.main,
     position: "absolute",
     top: "50%",
     left: "50%",
@@ -68,15 +68,15 @@ const useModalStyles = makeStyles((theme) => ({
   },
 }));
 
-const apiUrl = "https://caratulas-ucsp-api-proxy.vercel.app/api/cover";
-
 function App() {
   const classes = useStyles();
   const modalClasses = useModalStyles();
 
   const [url, setUrl] = useState("");
 
-  const { post, response, loading, error } = useFetch(apiUrl);
+  const { post, response, loading, error } = useFetch(
+    "https://caratulas-ucsp-api-proxy.vercel.app/api/cover"
+  );
 
   const { showError } = useErrorSnack();
 
@@ -84,7 +84,9 @@ function App() {
     ReactGA.pageview(window.location.pathname + window.location.search);
   }, []);
 
-  const generateCover = async (data) => {
+  const generateCover: ComponentProps<typeof CoverForm>["onSubmit"] = async (
+    data
+  ) => {
     const coverData = await post("/", data);
     if (response.ok) {
       setUrl(coverData.link);
@@ -128,7 +130,7 @@ function App() {
                     variant="contained"
                     color="primary"
                     onClick={onClickGenerate}
-                    disabled={loading || !!hasErrors}
+                    disabled={loading || hasErrors}
                   >
                     Generar Carátula
                   </Button>

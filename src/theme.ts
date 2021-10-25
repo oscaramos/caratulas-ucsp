@@ -1,15 +1,11 @@
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createTheme } from "@material-ui/core/styles";
 
 const arcBlue = "#1A5BA0";
 const arcOrange = "#FFBA60";
 const background = "#dfdbd9";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
-    common: {
-      blue: arcBlue,
-      orange: arcOrange,
-    },
     primary: {
       main: arcBlue,
     },
@@ -21,18 +17,6 @@ const theme = createMuiTheme({
     },
   },
   typography: {
-    tab: {
-      fontFamily: "Raleway",
-      textTransform: "none",
-      fontWeight: "700",
-      fontSize: "1rem",
-    },
-    estimate: {
-      fontFamily: "Pacifico",
-      fontSize: "1rem",
-      textTransform: "none",
-      color: "white",
-    },
     h1: {
       fontFamily: `'Noto Sans JP', sans-serif`,
       fontSize: "2.5rem",
@@ -52,7 +36,6 @@ const theme = createMuiTheme({
       lineHeight: 1.66,
     },
   },
-  //MuiOutlinedInput-adornedEnd
   overrides: {
     MuiOutlinedInput: {
       adornedEnd: {

@@ -1,21 +1,25 @@
-import React from "react";
-import { useState, createContext, useContext } from "react";
+import React, { createContext, ReactNode, useContext, useState } from "react";
 import Alert from "@material-ui/lab/Alert";
 import { Snackbar } from "@material-ui/core";
 
-const ErrorSnackContext = createContext(undefined);
+const ErrorSnackContext = createContext<
+  { showError: (message: string) => void } | undefined
+>(undefined);
 
-export function ErrorSnackProvider({ children }) {
+export function ErrorSnackProvider({ children }: { children: ReactNode }) {
   const [openSnack, setOpenSnack] = useState(false);
   const [messageSnack, setMessageSnack] = useState("");
 
-  const handleCloseSnack = (event, reason) => {
+  const handleCloseSnack = (
+    event: React.SyntheticEvent<any>,
+    reason?: string
+  ) => {
     if (reason !== "clickaway") {
       setOpenSnack(false);
     }
   };
 
-  const showError = (message) => {
+  const showError = (message: string) => {
     setOpenSnack(true);
     setMessageSnack(message);
   };

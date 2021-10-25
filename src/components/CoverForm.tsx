@@ -20,7 +20,7 @@ import RemoveIcon from "@material-ui/icons/Remove";
 
 import ControlledAutocomplete from "./ControlledAutocomplete";
 
-import courses from "../assets/courses.json";
+import courses from "../assets/courses";
 
 const careerOptions = [
   "Ciencia de la Computación",
@@ -53,10 +53,6 @@ const semesterOptions = [
   "Semestre XII",
 ];
 
-const getCourses = (career) => {
-  return courses[career] ?? [];
-};
-
 const useStyles = makeStyles((theme) => ({
   form: {
     paddingTop: theme.spacing(2),
@@ -75,10 +71,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CoverForm({ onSubmit, submitButton }) {
+type CoverData = {
+  work: string;
+  career: string;
+  course: string;
+  semester: string;
+  year: string;
+  members: { name: string }[];
+  names: string[];
+};
+
+export default function CoverForm({
+  onSubmit,
+  submitButton,
+}: {
+  onSubmit: (data: CoverData) => void;
+  submitButton: (
+    onClickGenerate: () => void,
+    hasErrors: boolean
+  ) => React.ReactNode;
+}) {
   const classes = useStyles();
 
-  const { register, watch, errors, getValues, control } = useForm({
+  const { register, watch, errors, getValues, control } = useForm<
+    Omit<CoverData, "names">
+  >({
     mode: "onBlur",
     defaultValues: {
       work: "",
@@ -106,7 +123,6 @@ export default function CoverForm({ onSubmit, submitButton }) {
       onSubmit({
         ...values,
         names: values.members.map((obj) => obj.name),
-        course: values.course,
       });
     }
   };
@@ -135,7 +151,6 @@ export default function CoverForm({ onSubmit, submitButton }) {
               label="Carrera"
               error={!!errors.career}
               helperText={errors?.career?.message}
-              fullWidth
               {...params}
             />
           )}
@@ -150,9 +165,9 @@ export default function CoverForm({ onSubmit, submitButton }) {
         <ControlledAutocomplete
           control={control}
           name="course"
-          options={getCourses(career)}
+          options={courses[career]}
           groupBy={(option) => option.semester}
-          getOptionLabel={(option) => option?.name ?? ""}
+          getOptionLabel={(option) => option.name}
           renderInput={(params) => (
             <TextField
               name="course"
@@ -160,7 +175,6 @@ export default function CoverForm({ onSubmit, submitButton }) {
               label="Curso"
               error={!!errors.course}
               helperText={errors?.course?.message}
-              fullWidth
               {...params}
             />
           )}
@@ -197,7 +211,6 @@ export default function CoverForm({ onSubmit, submitButton }) {
                   label="Semestre"
                   error={!!errors.semester}
                   helperText={errors?.semester?.message}
-                  fullWidth
                   {...params}
                 />
               )}
@@ -271,7 +284,7 @@ export default function CoverForm({ onSubmit, submitButton }) {
                     variant="outlined"
                     name="names"
                     error={!!errors?.members?.[index]}
-                    helperText={errors?.members?.[index]?.name.message}
+                    helperText={errors?.members?.[index]?.name?.message}
                     onKeyDown={(keyEvent) => {
                       if (keyEvent.ctrlKey && keyEvent.key === "Enter") {
                         onClickGenerate();
