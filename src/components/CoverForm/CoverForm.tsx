@@ -13,69 +13,20 @@ import {
   RadioGroup,
   TextField,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
 
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 
-import ControlledAutocomplete from "./ControlledAutocomplete";
+import ControlledAutocomplete from "./components/ControlledAutocomplete";
 
-import courses from "../assets/courses";
-
-const careerOptions = [
-  "Ciencia de la Computación",
-  "Administración de Empresas",
-  "Arquitectura y Urbanismo",
-  "Contabilidad",
-  "Derecho",
-  "Educación Inicial",
-  "Educación Primaria",
-  "Ingeniería Ambiental",
-  "Ingeniería Civil",
-  "Ingeniería Electrónica y Telecomunicaciones",
-  "Ingeniería Industrial",
-  "Ingeniería Mecatrónica",
-  "Psicología",
-];
-
-const semesterOptions = [
-  "Semestre I",
-  "Semestre II",
-  "Semestre III",
-  "Semestre IV",
-  "Semestre V",
-  "Semestre VI",
-  "Semestre VII",
-  "Semestre VIII",
-  "Semestre IX",
-  "Semestre X",
-  "Semestre XI",
-  "Semestre XII",
-];
-
-const useStyles = makeStyles((theme) => ({
-  form: {
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-  },
-  itemContainer: {
-    width: "100%",
-  },
-  semesterInput: {
-    width: "60%",
-    display: "inline",
-  },
-  yearInput: {
-    width: "40%",
-    display: "inline",
-  },
-}));
+import { useStyles } from "./styles";
+import { courses, careerOptions, semesterOptions } from "./autocompleteOptions";
 
 type CoverData = {
   work: string;
-  career: string;
+  career: typeof careerOptions[number] | "";
   course: string;
-  semester: string;
+  semester: typeof semesterOptions[number] | "";
   year: string;
   members: { name: string }[];
   names: string[];
@@ -143,7 +94,7 @@ export default function CoverForm({
         <ControlledAutocomplete
           control={control}
           name="career"
-          options={careerOptions}
+          options={(careerOptions as unknown) as string[]}
           renderInput={(params) => (
             <TextField
               name="career"
@@ -165,7 +116,7 @@ export default function CoverForm({
         <ControlledAutocomplete
           control={control}
           name="course"
-          options={courses[career]}
+          options={career !== "" ? courses[career] : []}
           groupBy={(option) => option.semester}
           getOptionLabel={(option) => option.name}
           renderInput={(params) => (
@@ -203,7 +154,7 @@ export default function CoverForm({
             <ControlledAutocomplete
               control={control}
               name="semester"
-              options={semesterOptions}
+              options={(semesterOptions as unknown) as string[]}
               renderInput={(params) => (
                 <TextField
                   name="semester"

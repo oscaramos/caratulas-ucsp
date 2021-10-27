@@ -1,8 +1,39 @@
 // noinspection JSNonASCIINames,NonAsciiCharacters
 
-export type Course = { name: string; semester: string };
+export const careerOptions = [
+  "Ciencia de la Computación",
+  "Administración de Empresas",
+  "Arquitectura y Urbanismo",
+  "Contabilidad",
+  "Derecho",
+  "Educación Inicial",
+  "Educación Primaria",
+  "Ingeniería Ambiental",
+  "Ingeniería Civil",
+  "Ingeniería Electrónica y Telecomunicaciones",
+  "Ingeniería Industrial",
+  "Ingeniería Mecatrónica",
+  "Psicología",
+] as const;
 
-const courses: Record<string, Course[]> = {
+export const semesterOptions = [
+  "Semestre I",
+  "Semestre II",
+  "Semestre III",
+  "Semestre IV",
+  "Semestre V",
+  "Semestre VI",
+  "Semestre VII",
+  "Semestre VIII",
+  "Semestre IX",
+  "Semestre X",
+  "Semestre XI",
+  "Semestre XII",
+] as const;
+
+type Course = { name: string; semester: typeof semesterOptions[number] };
+
+export const courses: Record<typeof careerOptions[number], Course[]> = {
   "Ciencia de la Computación": [
     { name: "Programación de Video Juegos", semester: "Semestre I" },
     { name: "Estructura Discretas I", semester: "Semestre I" },
@@ -1618,5 +1649,3 @@ const courses: Record<string, Course[]> = {
     { name: "Trastornos del Lenguaje", semester: "Semestre X" },
   ],
 };
-
-export default courses;

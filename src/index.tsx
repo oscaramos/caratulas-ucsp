@@ -1,4 +1,5 @@
 import React from "react";
+import ReactGA from "react-ga";
 import ReactDOM from "react-dom";
 import * as serviceWorker from "./serviceWorker";
 
@@ -7,8 +8,10 @@ import { ThemeProvider } from "@material-ui/core/styles";
 
 import { ErrorSnackProvider } from "./hooks/useErrorSnack";
 
-import App from "./App";
+import App from "./pages/App";
 import theme from "./theme";
+
+ReactGA.initialize("UA-160924990-2");
 
 ReactDOM.render(
   <React.StrictMode>
