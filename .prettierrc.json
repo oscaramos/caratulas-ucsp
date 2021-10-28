@@ -1,0 +1,12 @@
+{
+  "importOrder": [
+    "^@material-ui/(.*)$",
+    "^assets/(.*)$",
+    "^components/(.*)$",
+    "^hooks/(.*)$",
+    "^pages/(.*)$",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
+}

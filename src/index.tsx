@@ -1,14 +1,15 @@
 import React from "react";
-import ReactGA from "react-ga";
 import ReactDOM from "react-dom";
-import * as serviceWorker from "./serviceWorker";
+import ReactGA from "react-ga";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ThemeProvider } from "@material-ui/core/styles";
 
-import { ErrorSnackProvider } from "./hooks/useErrorSnack";
+import { ErrorSnackProvider } from "hooks/useErrorSnack";
 
-import App from "./pages/App";
+import App from "pages/App";
+
+import * as serviceWorker from "./serviceWorker";
 import theme from "./theme";
 
 ReactGA.initialize("UA-160924990-2");

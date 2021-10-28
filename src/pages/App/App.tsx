@@ -1,13 +1,14 @@
+import JsPDF from "jspdf";
 import React, { ComponentProps, useEffect, useState } from "react";
 import ReactGA from "react-ga";
 import GithubCorner from "react-github-corner";
 
 import { Grid, Paper, Typography } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
 
 import CoverForm from "components/CoverForm";
-import Button from "@material-ui/core/Button";
+
 import { useStyles } from "./styles";
-import JsPDF from "jspdf";
 
 function App() {
   const classes = useStyles();

@@ -13,14 +13,12 @@ import {
   RadioGroup,
   TextField,
 } from "@material-ui/core";
-
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 
+import { careerOptions, courses, semesterOptions } from "./autocompleteOptions";
 import ControlledAutocomplete from "./components/ControlledAutocomplete";
-
 import { useStyles } from "./styles";
-import { courses, careerOptions, semesterOptions } from "./autocompleteOptions";
 
 type CoverData = {
   work: string;
