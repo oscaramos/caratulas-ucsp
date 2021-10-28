@@ -1,35 +1,18 @@
 import React, { ComponentProps, useEffect, useState } from "react";
 import ReactGA from "react-ga";
-import useFetch from "use-http";
 import GithubCorner from "react-github-corner";
 
-import {
-  Container,
-  Paper,
-  Grid,
-  IconButton,
-  CircularProgress,
-  Typography,
-  Collapse,
-} from "@material-ui/core";
-
-import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
+import { Grid, Paper, Typography } from "@material-ui/core";
 
 import CoverForm from "components/CoverForm";
-import { useErrorSnack } from "hooks/useErrorSnack";
 import Button from "@material-ui/core/Button";
 import { useStyles } from "./styles";
+import JsPDF from "jspdf";
 
 function App() {
   const classes = useStyles();
 
-  const [url, setUrl] = useState("");
-
-  const { post, response, loading, error } = useFetch(
-    "https://caratulas-ucsp-api-proxy.vercel.app/api/cover"
-  );
-
-  const { showError } = useErrorSnack();
+  const [outputUrl, setOutputUrl] = useState<URL | null>(null);
 
   useEffect(() => {
     ReactGA.pageview(window.location.pathname + window.location.search);
@@ -38,78 +21,71 @@ function App() {
   const generateCover: ComponentProps<typeof CoverForm>["onSubmit"] = async (
     data
   ) => {
-    const coverData = await post("/", data);
-    if (response.ok) {
-      setUrl(coverData.link);
-    }
+    const doc = new JsPDF();
+    doc.text("Hello world!", 20, 20);
+    doc.text("This is client-side Javascript, pumping out a PDF.", 20, 30);
+    doc.addPage();
+    doc.text("Do you like that?", 20, 20);
+
+    setOutputUrl(doc.output("bloburl"));
   };
 
-  useEffect(() => {
-    if (error) {
-      showError(`Error: ${error}`);
-    }
-  }, [showError, error]);
-
-  const handleDownloadCover = () => {
-    ReactGA.event({
-      category: "User",
-      action: "Download the generated Cover",
-    });
-  };
+  console.log(outputUrl);
 
   return (
-    <Container maxWidth="xs" className={classes.root}>
-      <Paper className={classes.paper}>
-        <Grid container direction="column" alignItems="center">
-          <Grid item style={{ marginBottom: "1em" }}>
-            <Typography variant="h1">Carátulas UCSP</Typography>
-          </Grid>
+    <div className={classes.root}>
+      <Grid container direction="row">
+        <Grid item xs={6}>
+          <Paper className={classes.paper}>
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              justifyContent="center"
+              className={classes.formContainer}
+            >
+              <Grid item>
+                <Typography variant="h2">Carátulas UCSP</Typography>
+              </Grid>
 
-          <Grid item container>
-            <CoverForm
-              onSubmit={generateCover}
-              submitButton={(onClickGenerate, hasErrors) => (
-                <div className={classes.wrapperSubmitButton}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={onClickGenerate}
-                    disabled={loading || hasErrors}
-                  >
-                    Generar Carátula
-                  </Button>
-                  {loading && (
-                    <CircularProgress
-                      size={24}
-                      className={classes.buttonProgress}
-                    />
+              <Grid item container>
+                <CoverForm
+                  onSubmit={generateCover}
+                  submitButton={(onClickGenerate, hasErrors) => (
+                    <div className={classes.wrapperSubmitButton}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={onClickGenerate}
+                        disabled={hasErrors}
+                      >
+                        Generar Carátula
+                      </Button>
+                    </div>
                   )}
-                </div>
-              )}
-            />
-          </Grid>
-
-          <Grid item>
-            <Collapse in={!!url}>
-              <IconButton
-                href={url}
-                onClick={handleDownloadCover}
-                target="_blank"
-                hidden={!url}
-                color="primary"
-              >
-                <PictureAsPdfIcon />
-              </IconButton>
-            </Collapse>
-          </Grid>
+                />
+              </Grid>
+            </Grid>
+          </Paper>
         </Grid>
-      </Paper>
+        <Grid item xs={6}>
+          <iframe
+            style={{
+              width: "100%",
+              height: "100%",
+              zIndex: 2,
+              border: "none",
+            }}
+            src={(outputUrl as unknown) as string}
+          />
+        </Grid>
+      </Grid>
 
       <GithubCorner
         href="https://github.com/oscaramos/caratulas-ucsp"
         size={80}
       />
-    </Container>
+    </div>
   );
 }
 

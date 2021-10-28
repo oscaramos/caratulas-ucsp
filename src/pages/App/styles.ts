@@ -2,20 +2,18 @@ import { makeStyles } from "@material-ui/core/styles";
 
 export const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop: theme.spacing(10),
     padding: 0,
-    [theme.breakpoints.down("xs")]: {
-      width: "100%",
-      maxWidth: "100%",
-      marginLeft: 0,
-      marginRight: 0,
-    },
   },
   paper: {
-    paddingTop: "2em",
-    paddingBottom: "2em",
+    display: "flex",
+    justifyContent: "center",
     paddingLeft: "10%",
     paddingRight: "10%",
+    height: "100vh",
+  },
+  formContainer: {
+    height: "100%",
+    maxWidth: 500,
   },
   wrapperSubmitButton: {
     position: "relative",
