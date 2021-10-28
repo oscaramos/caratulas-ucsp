@@ -6,6 +6,8 @@ import GithubCorner from "react-github-corner";
 import { Grid, Paper, Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 
+import LogoSanPabloImg from "assets/logo-sanpablo.png";
+
 import CoverForm from "components/CoverForm";
 
 import { useStyles } from "./styles";
@@ -23,15 +25,43 @@ function App() {
     data
   ) => {
     const doc = new JsPDF();
-    doc.text("Hello world!", 20, 20);
-    doc.text("This is client-side Javascript, pumping out a PDF.", 20, 30);
-    doc.addPage();
-    doc.text("Do you like that?", 20, 20);
+    doc.addImage(LogoSanPabloImg, "JPEG", 120, 20, 70, 30);
+
+    const xcenter = 105;
+    const xright = 190;
+
+    doc.setFontSize(22);
+    doc.text("Career", xcenter, 80, { align: "center" });
+
+    doc.setFontSize(18);
+    doc.text("Course", xcenter, 90, { align: "center" });
+
+    doc.setFontSize(16);
+    doc.text("Work", xcenter, 100, { align: "center" });
+
+    doc.setFontSize(18);
+    doc.text("Name 1 Name 2 Last names", xright, 120, { align: "right" });
+
+    doc.text("Semester", xright, 200, { align: "right" });
+    doc.text("Year", xright, 210, { align: "right" });
+
+    doc.text(
+      `"El alumno declara haber realizado el presente trabajo de`,
+      xcenter,
+      230,
+      { align: "center" }
+    );
+    doc.text(
+      `acuerdo a las normas de la Universidad Católica San Pablo"`,
+      xcenter,
+      237,
+      { align: "center" }
+    );
+
+    doc.line(xcenter - 20, 260, xcenter + 20, 260);
 
     setOutputUrl(doc.output("bloburl"));
   };
-
-  console.log(outputUrl);
 
   return (
     <div className={classes.root}>
@@ -71,6 +101,7 @@ function App() {
         </Grid>
         <Grid item xs={6}>
           <iframe
+            title="outputPdf"
             style={{
               width: "100%",
               height: "100%",
