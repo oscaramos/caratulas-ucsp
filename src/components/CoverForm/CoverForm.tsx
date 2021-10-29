@@ -1,3 +1,4 @@
+import { debounce } from "lodash";
 import React from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 
@@ -32,13 +33,8 @@ type CoverData = {
 
 export default function CoverForm({
   onSubmit,
-  submitButton,
 }: {
   onSubmit: (data: CoverData) => void;
-  submitButton: (
-    onClickGenerate: () => void,
-    hasErrors: boolean
-  ) => React.ReactNode;
 }) {
   const classes = useStyles();
 
@@ -63,18 +59,18 @@ export default function CoverForm({
     name: "members",
   });
 
-  const hasErrors = Object.values(errors).length > 0;
-
-  const onClickGenerate = () => {
-    if (!hasErrors) {
-      const values = getValues();
-
-      onSubmit({
-        ...values,
-        names: values.members.map((obj) => obj.name),
-      });
+  const onChange = debounce(() => {
+    if (Object.values(errors).length > 0) {
+      return;
     }
-  };
+
+    const values = getValues();
+
+    onSubmit({
+      ...values,
+      names: values.members.map((obj) => obj.name),
+    });
+  }, 1000);
 
   return (
     <Grid
@@ -98,11 +94,13 @@ export default function CoverForm({
               name="career"
               variant="outlined"
               label="Carrera"
+              onChange={onChange}
               error={!!errors.career}
               helperText={errors?.career?.message}
               {...params}
             />
           )}
+          onChange={onChange}
           rules={{ required: "Escriba una carrera" }}
           defaultValue={null}
           openOnFocus
@@ -122,11 +120,13 @@ export default function CoverForm({
               name="course"
               variant="outlined"
               label="Curso"
+              onChange={onChange}
               error={!!errors.course}
               helperText={errors?.course?.message}
               {...params}
             />
           )}
+          onChange={onChange}
           rules={{ required: "Escriba un curso" }}
           defaultValue={null}
           openOnFocus
@@ -139,6 +139,7 @@ export default function CoverForm({
           name="work"
           variant="outlined"
           label="Nombre del trabajo"
+          onChange={onChange}
           error={!!errors.work}
           helperText={errors?.work?.message}
           inputRef={register({ required: "Escriba el nombre de su trabajo" })}
@@ -158,11 +159,13 @@ export default function CoverForm({
                   name="semester"
                   variant="outlined"
                   label="Semestre"
+                  onChange={onChange}
                   error={!!errors.semester}
                   helperText={errors?.semester?.message}
                   {...params}
                 />
               )}
+              onChange={onChange}
               rules={{ required: "Escriba el semestre del curso" }}
               defaultValue={null}
               openOnFocus
@@ -174,6 +177,7 @@ export default function CoverForm({
               name="year"
               variant="outlined"
               label="Año"
+              onChange={onChange}
               error={!!errors.year}
               helperText={errors?.year?.message}
               inputRef={register({
@@ -235,9 +239,7 @@ export default function CoverForm({
                     error={!!errors?.members?.[index]}
                     helperText={errors?.members?.[index]?.name?.message}
                     onKeyDown={(keyEvent) => {
-                      if (keyEvent.ctrlKey && keyEvent.key === "Enter") {
-                        onClickGenerate();
-                      } else if (keyEvent.key === "Enter") {
+                      if (keyEvent.key === "Enter") {
                         append({ name: "" });
                       }
                     }}
@@ -271,9 +273,6 @@ export default function CoverForm({
             </Grid>
           ))}
         </Grid>
-      </Grid>
-      <Grid item style={{ marginTop: "2em" }}>
-        {submitButton(onClickGenerate, hasErrors)}
       </Grid>
     </Grid>
   );

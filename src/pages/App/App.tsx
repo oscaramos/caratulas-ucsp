@@ -4,7 +4,6 @@ import ReactGA from "react-ga";
 import GithubCorner from "react-github-corner";
 
 import { Grid, Paper, Typography } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
 
 import LogoSanPabloImg from "assets/logo-sanpablo.png";
 
@@ -31,19 +30,19 @@ function App() {
     const xright = 190;
 
     doc.setFontSize(22);
-    doc.text("Career", xcenter, 80, { align: "center" });
+    doc.text(data.career, xcenter, 80, { align: "center" });
 
     doc.setFontSize(18);
-    doc.text("Course", xcenter, 90, { align: "center" });
+    doc.text(data.course, xcenter, 90, { align: "center" });
 
     doc.setFontSize(16);
-    doc.text("Work", xcenter, 100, { align: "center" });
+    doc.text(data.work, xcenter, 100, { align: "center" });
 
     doc.setFontSize(18);
     doc.text("Name 1 Name 2 Last names", xright, 120, { align: "right" });
 
-    doc.text("Semester", xright, 200, { align: "right" });
-    doc.text("Year", xright, 210, { align: "right" });
+    doc.text(data.semester, xright, 200, { align: "right" });
+    doc.text(data.year, xright, 210, { align: "right" });
 
     doc.text(
       `"El alumno declara haber realizado el presente trabajo de`,
@@ -80,21 +79,7 @@ function App() {
               </Grid>
 
               <Grid item container>
-                <CoverForm
-                  onSubmit={generateCover}
-                  submitButton={(onClickGenerate, hasErrors) => (
-                    <div className={classes.wrapperSubmitButton}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={onClickGenerate}
-                        disabled={hasErrors}
-                      >
-                        Generar Carátula
-                      </Button>
-                    </div>
-                  )}
-                />
+                <CoverForm onSubmit={generateCover} />
               </Grid>
             </Grid>
           </Paper>
