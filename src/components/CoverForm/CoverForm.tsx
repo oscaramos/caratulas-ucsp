@@ -48,7 +48,7 @@ export default function CoverForm({
       course: "",
       semester: "",
       gender: "male",
-      year: "2021-1",
+      year: `${new Date().getFullYear()}-${new Date().getMonth() >= 7 ? 2 : 1}`,
       members: [{ name: "" }],
     },
   });
