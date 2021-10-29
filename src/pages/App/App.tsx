@@ -178,6 +178,7 @@ function App() {
       <GithubCorner
         href="https://github.com/oscaramos/caratulas-ucsp"
         size={80}
+        direction="left"
       />
     </div>
   );
