@@ -1,6 +1,6 @@
 {
   "name": "caratulas-ucsp",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "private": true,
   "homepage": "http://oscaramos.github.io/caratulas-ucsp",
   "dependencies": {
@@ -19,8 +19,7 @@
     "react-github-corner": "^2.5.0",
     "react-hook-form": "^6.12.2",
     "react-scripts": "3.4.1",
-    "typescript": "^4.4.4",
-    "use-http": "^1.0.16"
+    "typescript": "^4.4.4"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^4.2.4",
