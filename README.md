@@ -14,27 +14,17 @@
 ![Repo size](https://img.shields.io/github/repo-size/oscaramos/caratulas-ucsp)
 
 Aplicación web sobre generación de caratulas de la Universidad Católica San Pablo(UCSP)
-Puede explorar el back-end [aquí](https://github.com/oscaramos/caratulas-ucsp-api)
-
-Si hubiese algún error o se les ocurre alguna mejora usar la sección de Issues o aún mejor hacer un Pull Request.
+Solía tener un [backend](https://github.com/oscaramos/caratulas-ucsp-api), dejó de ser necesario debido a que las carátulas ahora son generadas en el navegador usando [jspdf](https://parall.ax/products/jspdf).
 
 # Despliegue
 
-La página esta desplegada con [Github Pages](https://pages.github.com/) y se encuentra [aquí](https://oscaramos.github.io/caratulas-ucsp/)
+La página está desplegada con [Github Pages](https://pages.github.com/) y se encuentra [aquí](https://oscaramos.github.io/caratulas-ucsp/)
 
 # Herramientas
 
 - [React](https://es.reactjs.org/) - Framework base
+- [Typescript](https://es.reactjs.org/) - Javascript con tipos
+- [jspdf](https://parall.ax/products/jspdf) - Generador de pdf en el navegador
 - [Material-UI](https://material-ui.com/) - Componentes para la interfaz de usuario
 - [Github Pages](https://pages.github.com/) - Despliegue y Hosting de la página
 - [Google Analytics](https://analytics.google.com/analytics/web/#/) - Para medir el trafico
-
-# Características
-
-- Formulario agradable a la vista, fácil de usar
-- Aplicación responsive para que luzca bien en todas las pantallas
-- Carátulas generadas en latex para mejor visualización de la caratula
-- Aplicación instalable en computadoras de escritorio y teléfonos celulares ([PWA](https://www.xataka.com/basics/que-es-una-aplicacion-web-progresiva-o-pwa))
-- Uso de las últimas tecnologías en el mercado ([React](https://es.reactjs.org/), [Docker](https://www.docker.com/))
-- Autocompletado de carreras, cursos y semestre
-- Agregado de multiples personas(Probado hasta 8)
