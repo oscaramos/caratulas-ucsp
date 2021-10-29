@@ -12,6 +12,7 @@ export default function ControlledAutocomplete<T>({
   defaultValue,
   name,
   rules,
+  ignoreControllerRenderValue,
   ...moreProps
 }: {
   options: T[];
@@ -20,6 +21,7 @@ export default function ControlledAutocomplete<T>({
   defaultValue: ComponentProps<typeof Controller>["defaultValue"];
   name: ComponentProps<typeof Controller>["name"];
   rules: ComponentProps<typeof Controller>["rules"];
+  ignoreControllerRenderValue?: boolean;
 } & AutocompleteProps<
   T,
   boolean | undefined,
@@ -35,6 +37,7 @@ export default function ControlledAutocomplete<T>({
           onInputChange={(e, data) => {
             onChange(data);
           }}
+          value={ignoreControllerRenderValue ? undefined : value}
           {...props}
           {...moreProps}
         />

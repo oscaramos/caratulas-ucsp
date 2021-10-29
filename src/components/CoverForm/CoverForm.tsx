@@ -38,7 +38,7 @@ export default function CoverForm({
 }) {
   const classes = useStyles();
 
-  const { register, watch, errors, getValues, control } = useForm<
+  const { register, watch, errors, getValues, control, setValue } = useForm<
     Omit<CoverData, "names">
   >({
     mode: "onBlur",
@@ -71,6 +71,18 @@ export default function CoverForm({
       ...values,
     });
   }, 1000);
+
+  const onCourseChangeByAutocomplete = () => {
+    onChange();
+
+    const career = getValues("career");
+    const course = getValues("course");
+    if (!career || !course) return;
+
+    const semester = courses[career].find((item) => item.name === course)
+      ?.semester;
+    setValue("semester", semester);
+  };
 
   return (
     <Grid
@@ -126,11 +138,12 @@ export default function CoverForm({
               {...params}
             />
           )}
-          onChange={onChange}
+          onChange={onCourseChangeByAutocomplete}
           rules={{ required: "Escriba un curso" }}
           defaultValue={null}
           openOnFocus
           freeSolo
+          ignoreControllerRenderValue
         />
       </Grid>
       {/*----- Work -----*/}
