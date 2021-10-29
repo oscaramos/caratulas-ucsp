@@ -14,6 +14,7 @@ export const useStyles = makeStyles((theme) => ({
   formContainer: {
     height: "100%",
     maxWidth: 400,
+    flexWrap: "nowrap",
   },
   wrapperSubmitButton: {
     position: "relative",
