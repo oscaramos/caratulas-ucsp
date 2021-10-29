@@ -39,23 +39,38 @@ function App() {
     doc.text(data.work, xcenter, 100, { align: "center" });
 
     doc.setFontSize(18);
-    doc.text("Name 1 Name 2 Last names", xright, 120, { align: "right" });
+    doc.text(data.members[0].name, xright, 120, { align: "right" });
 
     doc.text(data.semester, xright, 200, { align: "right" });
     doc.text(data.year, xright, 210, { align: "right" });
 
-    doc.text(
-      `"El alumno declara haber realizado el presente trabajo de`,
-      xcenter,
-      230,
-      { align: "center" }
-    );
-    doc.text(
-      `acuerdo a las normas de la Universidad Católica San Pablo"`,
-      xcenter,
-      237,
-      { align: "center" }
-    );
+    if (data.gender === "male") {
+      doc.text(
+        `"El alumno declara haber realizado el presente trabajo de`,
+        xcenter,
+        230,
+        { align: "center" }
+      );
+      doc.text(
+        `acuerdo a las normas de la Universidad Católica San Pablo"`,
+        xcenter,
+        237,
+        { align: "center" }
+      );
+    } else if (data.gender === "female") {
+      doc.text(
+        `"La alumna declara haber realizado el presente trabajo de`,
+        xcenter,
+        230,
+        { align: "center" }
+      );
+      doc.text(
+        `acuerdo a las normas de la Universidad Católica San Pablo"`,
+        xcenter,
+        237,
+        { align: "center" }
+      );
+    }
 
     doc.line(xcenter - 20, 260, xcenter + 20, 260);
 

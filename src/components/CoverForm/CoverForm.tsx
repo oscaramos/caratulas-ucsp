@@ -27,8 +27,8 @@ type CoverData = {
   course: string;
   semester: typeof semesterOptions[number] | "";
   year: string;
+  gender: "male" | "female";
   members: { name: string }[];
-  names: string[];
 };
 
 export default function CoverForm({
@@ -47,6 +47,7 @@ export default function CoverForm({
       career: "",
       course: "",
       semester: "",
+      gender: "male",
       year: "2021-1",
       members: [{ name: "" }],
     },
@@ -68,7 +69,6 @@ export default function CoverForm({
 
     onSubmit({
       ...values,
-      names: values.members.map((obj) => obj.name),
     });
   }, 1000);
 
@@ -196,24 +196,25 @@ export default function CoverForm({
             <Controller
               name="gender"
               control={control}
-              defaultValue="M"
               as={
                 <RadioGroup row aria-label="Género">
                   <FormControlLabel
                     name="gender"
                     key="M"
-                    value="M"
+                    value="male"
                     label="Masculino"
                     style={{ marginRight: "1.25em" }}
                     control={<Radio color="primary" />}
+                    onChange={onChange}
                   />
                   <FormControlLabel
                     name="gender"
                     key="F"
-                    value="F"
+                    value="female"
                     label="Femenino"
                     style={{ marginRight: "1.25em" }}
                     control={<Radio color="primary" />}
+                    onChange={onChange}
                   />
                 </RadioGroup>
               }
@@ -241,6 +242,8 @@ export default function CoverForm({
                     onKeyDown={(keyEvent) => {
                       if (keyEvent.key === "Enter") {
                         append({ name: "" });
+                      } else {
+                        onChange();
                       }
                     }}
                     fullWidth
