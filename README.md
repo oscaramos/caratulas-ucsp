@@ -18,7 +18,10 @@ SolÃ­a tener un [backend](https://github.com/oscaramos/caratulas-ucsp-api), dejÃ
 
 # Capturas de pantalla
 
+## Un solo integrante
 <img src="./Screenshot1.png" width="900" alt="Screenshot 1">
+
+## Multiple integrantes
 <img src="./Screenshot2.png" width="900" alt="Screenshot 2">
 
 # Herramientas
