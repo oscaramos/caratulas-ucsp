@@ -242,9 +242,8 @@ export default function CoverForm({
                     onKeyDown={(keyEvent) => {
                       if (keyEvent.key === "Enter") {
                         append({ name: "" });
-                      } else {
-                        onChange();
                       }
+                      onChange();
                     }}
                     fullWidth
                     InputProps={{
@@ -254,14 +253,20 @@ export default function CoverForm({
                           {index === fields.length - 1 ? (
                             <IconButton
                               aria-label="add name"
-                              onClick={() => append({ name: "" })}
+                              onClick={() => {
+                                append({ name: "" });
+                                onChange();
+                              }}
                             >
                               <AddIcon fontSize="small" />
                             </IconButton>
                           ) : (
                             <IconButton
                               aria-label="remove name"
-                              onClick={() => remove(index)}
+                              onClick={() => {
+                                remove(index);
+                                onChange();
+                              }}
                             >
                               <RemoveIcon fontSize="small" />
                             </IconButton>

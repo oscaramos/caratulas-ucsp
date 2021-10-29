@@ -39,12 +39,27 @@ function App() {
     doc.text(data.work, xcenter, 100, { align: "center" });
 
     doc.setFontSize(18);
-    doc.text(data.members[0].name, xright, 120, { align: "right" });
+    data.members.forEach((member, index) => {
+      doc.text(member.name, xright, 120 + index * 8, { align: "right" });
+    });
 
     doc.text(data.semester, xright, 200, { align: "right" });
     doc.text(data.year, xright, 210, { align: "right" });
 
-    if (data.gender === "male") {
+    if (data.members.length >= 2) {
+      doc.text(
+        `"Los alumnos declaran haber realizado el presente trabajo de`,
+        xcenter,
+        230,
+        { align: "center" }
+      );
+      doc.text(
+        `acuerdo a las normas de la Universidad Católica San Pablo"`,
+        xcenter,
+        237,
+        { align: "center" }
+      );
+    } else if (data.gender === "male") {
       doc.text(
         `"El alumno declara haber realizado el presente trabajo de`,
         xcenter,
@@ -72,7 +87,54 @@ function App() {
       );
     }
 
-    doc.line(xcenter - 20, 260, xcenter + 20, 260);
+    const leftCoordX = xcenter - 15;
+    const rightCoordX = xcenter + 15;
+    const firstLineY = 260;
+    const secondLineY = 275;
+
+    if (data.members.length === 1) {
+      doc.line(leftCoordX, firstLineY, rightCoordX, firstLineY);
+    } else if (data.members.length === 2) {
+      doc.line(leftCoordX - 20, firstLineY, rightCoordX - 20, firstLineY);
+      doc.line(leftCoordX + 20, firstLineY, rightCoordX + 20, firstLineY);
+    } else if (data.members.length === 3) {
+      doc.line(leftCoordX - 40, firstLineY, rightCoordX - 40, firstLineY);
+      doc.line(leftCoordX, firstLineY, rightCoordX, firstLineY);
+      doc.line(leftCoordX + 40, firstLineY, rightCoordX + 40, firstLineY);
+    } else if (data.members.length === 4) {
+      doc.line(leftCoordX - 60, firstLineY, rightCoordX - 60, firstLineY);
+      doc.line(leftCoordX - 20, firstLineY, rightCoordX - 20, firstLineY);
+      doc.line(leftCoordX + 20, firstLineY, rightCoordX + 20, firstLineY);
+      doc.line(leftCoordX + 60, firstLineY, rightCoordX + 60, firstLineY);
+    } else if (data.members.length >= 5) {
+      doc.line(leftCoordX - 80, firstLineY, rightCoordX - 80, firstLineY);
+      doc.line(leftCoordX - 40, firstLineY, rightCoordX - 40, firstLineY);
+      doc.line(leftCoordX, firstLineY, rightCoordX, firstLineY);
+      doc.line(leftCoordX + 40, firstLineY, rightCoordX + 40, firstLineY);
+      doc.line(leftCoordX + 80, firstLineY, rightCoordX + 80, firstLineY);
+    }
+
+    if (data.members.length === 6) {
+      doc.line(leftCoordX, secondLineY, rightCoordX, secondLineY);
+    } else if (data.members.length === 7) {
+      doc.line(leftCoordX - 20, secondLineY, rightCoordX - 20, secondLineY);
+      doc.line(leftCoordX + 20, secondLineY, rightCoordX + 20, secondLineY);
+    } else if (data.members.length === 8) {
+      doc.line(leftCoordX - 40, secondLineY, rightCoordX - 40, secondLineY);
+      doc.line(leftCoordX, secondLineY, rightCoordX, secondLineY);
+      doc.line(leftCoordX + 40, secondLineY, rightCoordX + 40, secondLineY);
+    } else if (data.members.length === 9) {
+      doc.line(leftCoordX - 60, secondLineY, rightCoordX - 60, secondLineY);
+      doc.line(leftCoordX - 20, secondLineY, rightCoordX - 20, secondLineY);
+      doc.line(leftCoordX + 20, secondLineY, rightCoordX + 20, secondLineY);
+      doc.line(leftCoordX + 60, secondLineY, rightCoordX + 60, secondLineY);
+    } else if (data.members.length >= 10) {
+      doc.line(leftCoordX - 80, secondLineY, rightCoordX - 80, secondLineY);
+      doc.line(leftCoordX - 40, secondLineY, rightCoordX - 40, secondLineY);
+      doc.line(leftCoordX, secondLineY, rightCoordX, secondLineY);
+      doc.line(leftCoordX + 40, secondLineY, rightCoordX + 40, secondLineY);
+      doc.line(leftCoordX + 80, secondLineY, rightCoordX + 80, secondLineY);
+    }
 
     setOutputUrl(doc.output("bloburl"));
   };
