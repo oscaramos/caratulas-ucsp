@@ -13,12 +13,13 @@
 ![GitHub forks](https://img.shields.io/github/forks/oscaramos/caratulas-ucsp)
 ![Repo size](https://img.shields.io/github/repo-size/oscaramos/caratulas-ucsp)
 
-Aplicación web sobre generación de caratulas de la Universidad Católica San Pablo(UCSP)
+Aplicación web sobre generación de carátulas de la Universidad Católica San Pablo(UCSP)
 Solía tener un [backend](https://github.com/oscaramos/caratulas-ucsp-api), dejó de ser necesario debido a que las carátulas ahora son generadas en el navegador usando [jspdf](https://parall.ax/products/jspdf).
 
-# Despliegue
+# Capturas de pantalla
 
-La página está desplegada con [Github Pages](https://pages.github.com/) y se encuentra [aquí](https://oscaramos.github.io/caratulas-ucsp/)
+<img src="./Screenshot1.png" width="900" alt="Screenshot 1">
+<img src="./Screenshot2.png" width="900" alt="Screenshot 2">
 
 # Herramientas
 
@@ -28,3 +29,12 @@ La página está desplegada con [Github Pages](https://pages.github.com/) y se e
 - [Material-UI](https://material-ui.com/) - Componentes para la interfaz de usuario
 - [Github Pages](https://pages.github.com/) - Despliegue y Hosting de la página
 - [Google Analytics](https://analytics.google.com/analytics/web/#/) - Para medir el trafico
+
+# Despliegue
+
+La página está desplegada con [Github Pages](https://pages.github.com/) y se encuentra [aquí](https://oscaramos.github.io/caratulas-ucsp/)
+
+# Para ejecutar esta aplicación
+1. Clona este repositorio
+2. Ejecuta ```npm install```
+3. Ejecuta ```npm start```
