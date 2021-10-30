@@ -29,7 +29,7 @@ function App() {
     const xcenter = 105;
     const xright = 190;
 
-    doc.setFontSize(22);
+    doc.setFontSize(26);
     doc.text(data.career, xcenter, 80, { align: "center" });
 
     doc.setFontSize(18);
