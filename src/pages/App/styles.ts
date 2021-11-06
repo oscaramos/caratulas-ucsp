@@ -10,6 +10,7 @@ export const useStyles = makeStyles((theme) => ({
     paddingLeft: "10%",
     paddingRight: "10%",
     height: "100vh",
+    position: "relative",
   },
   formContainer: {
     height: "100%",
@@ -26,5 +27,12 @@ export const useStyles = makeStyles((theme) => ({
     left: "50%",
     marginTop: -12,
     marginLeft: -12,
+  },
+  footerTextContainer: {
+    position: "absolute",
+    bottom: 20,
+    left: 0,
+    width: "100%",
+    textAlign: "center",
   },
 }));

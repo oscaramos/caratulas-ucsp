@@ -159,6 +159,19 @@ function App() {
                 <CoverForm onSubmit={generateCover} />
               </Grid>
             </Grid>
+
+            <div className={classes.footerTextContainer}>
+              <Typography variant="subtitle1">
+                Hecho por{" "}
+                <a
+                  href="https://oscaramos.dev"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Oscar Ramos
+                </a>
+              </Typography>
+            </div>
           </Paper>
         </Grid>
         <Grid item xs={6}>
