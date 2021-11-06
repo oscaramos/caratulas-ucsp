@@ -1,6 +1,7 @@
 import { debounce } from "lodash";
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { usePreviousDistinct } from "react-use";
 
 import {
   Collapse,
@@ -8,14 +9,10 @@ import {
   FormControlLabel,
   FormLabel,
   Grid,
-  IconButton,
-  InputAdornment,
   Radio,
   RadioGroup,
   TextField,
 } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import RemoveIcon from "@material-ui/icons/Remove";
 
 import { careerOptions, courses, semesterOptions } from "./autocompleteOptions";
 import ControlledAutocomplete from "./components/ControlledAutocomplete";
@@ -60,17 +57,21 @@ export default function CoverForm({
     name: "members",
   });
 
-  const onChange = debounce(() => {
-    if (Object.values(errors).length > 0) {
-      return;
-    }
+  const onChange = useCallback(
+    debounce(() => {
+      if (Object.values(errors).length > 0) {
+        return;
+      }
 
-    const values = getValues();
+      const values = getValues();
 
-    onSubmit({
-      ...values,
-    });
-  }, 1000);
+      onSubmit({
+        ...values,
+        members: values.members.filter((member) => member.name.length > 0),
+      });
+    }, 3000),
+    []
+  );
 
   const onCourseChangeByAutocomplete = () => {
     onChange();
@@ -83,6 +84,48 @@ export default function CoverForm({
       ?.semester;
     setValue("semester", semester);
   };
+
+  const members = watch("members");
+  const previousMembers = usePreviousDistinct(
+    members,
+    (prev, next) => JSON.stringify(prev) === JSON.stringify(next)
+  );
+
+  useEffect(() => {
+    if (members.length === 0) return;
+
+    if (members[members.length - 1].name.length > 0) {
+      append({ name: "" });
+    }
+
+    members.forEach((member, index) => {
+      const wasModifiedToEmpty =
+        previousMembers?.[index]?.name.length !== member.name.length &&
+        member.name.length === 0;
+
+      if (
+        wasModifiedToEmpty &&
+        (index > 1 || (index === 1 && members.length > 2))
+      ) {
+        remove(index);
+        onChange();
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    JSON.stringify(members),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    JSON.stringify(previousMembers),
+    append,
+    onChange,
+    remove,
+  ]);
+
+  useEffect(() => {
+    append({ name: "" });
+    onChange();
+  }, [append, onChange]);
 
   return (
     <Grid
@@ -203,7 +246,7 @@ export default function CoverForm({
       </Grid>
       {/*----- Gender -----*/}
       <Grid item className={classes.itemContainer}>
-        <Collapse in={fields.length === 1}>
+        <Collapse in={fields.length <= 2}>
           <FormControl component="fieldset">
             <FormLabel component="legend">Género</FormLabel>
             <Controller
@@ -252,44 +295,12 @@ export default function CoverForm({
                     name="names"
                     error={!!errors?.members?.[index]}
                     helperText={errors?.members?.[index]?.name?.message}
-                    onKeyDown={(keyEvent) => {
-                      if (keyEvent.key === "Enter") {
-                        append({ name: "" });
-                      }
+                    onKeyDown={() => {
                       onChange();
                     }}
                     fullWidth
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          {/*----- The last name has plus button, the others has minus buttons -----*/}
-                          {index === fields.length - 1 ? (
-                            <IconButton
-                              aria-label="add name"
-                              onClick={() => {
-                                append({ name: "" });
-                                onChange();
-                              }}
-                            >
-                              <AddIcon fontSize="small" />
-                            </IconButton>
-                          ) : (
-                            <IconButton
-                              aria-label="remove name"
-                              onClick={() => {
-                                remove(index);
-                                onChange();
-                              }}
-                            >
-                              <RemoveIcon fontSize="small" />
-                            </IconButton>
-                          )}
-                        </InputAdornment>
-                      ),
-                    }}
                   />
                 }
-                rules={{ required: "Escriba el nombre del integrante" }}
               />
             </Grid>
           ))}
