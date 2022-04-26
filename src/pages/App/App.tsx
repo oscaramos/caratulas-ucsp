@@ -162,14 +162,7 @@ function App() {
 
             <div className={classes.footerTextContainer}>
               <Typography variant="subtitle1">
-                Hecho por{" "}
-                <a
-                  href="https://oscaramos.dev"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Oscar Ramos
-                </a>
+                Hecho por Oscar Ramos
               </Typography>
             </div>
           </Paper>
