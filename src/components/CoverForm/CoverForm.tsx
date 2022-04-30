@@ -30,15 +30,19 @@ type CoverData = {
 
 export default function CoverForm({
   onSubmit,
+  onStartTyping,
+  onValidationError,
 }: {
   onSubmit: (data: CoverData) => void;
+  onStartTyping: () => void;
+  onValidationError: () => void;
 }) {
   const classes = useStyles();
 
   const { register, watch, errors, getValues, control, setValue } = useForm<
     Omit<CoverData, "names">
   >({
-    mode: "onBlur",
+    mode: "onChange",
     defaultValues: {
       work: "",
       career: "",
@@ -57,9 +61,10 @@ export default function CoverForm({
     name: "members",
   });
 
-  const onChange = useCallback(
+  const onChangeSubmitDebounced = useCallback(
     debounce(() => {
       if (Object.values(errors).length > 0) {
+        onValidationError();
         return;
       }
 
@@ -72,6 +77,11 @@ export default function CoverForm({
     }, 3000),
     []
   );
+
+  const onChange = useCallback(() => {
+    onStartTyping();
+    onChangeSubmitDebounced();
+  }, [onStartTyping, onChangeSubmitDebounced]);
 
   const onCourseChangeByAutocomplete = () => {
     onChange();

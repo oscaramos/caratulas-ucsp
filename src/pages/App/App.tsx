@@ -1,5 +1,5 @@
 import JsPDF from "jspdf";
-import React, { ComponentProps, useEffect, useState } from "react";
+import React, { ComponentProps, useCallback, useEffect, useState } from "react";
 import ReactGA from "react-ga";
 import GithubCorner from "react-github-corner";
 
@@ -11,10 +11,13 @@ import CoverForm from "components/CoverForm";
 
 import { useStyles } from "./styles";
 
+type OutputPdfStatus = "loading" | "success" | "error";
+
 function App() {
   const classes = useStyles();
 
   const [outputUrl, setOutputUrl] = useState<URL | null>(null);
+  const [status, setStatus] = useState<OutputPdfStatus>("success");
 
   useEffect(() => {
     ReactGA.pageview(window.location.pathname + window.location.search);
@@ -137,6 +140,24 @@ function App() {
     }
 
     setOutputUrl(doc.output("bloburl"));
+    setStatus("success");
+  };
+
+  const handleStartTyping = useCallback(() => {
+    setStatus("loading");
+  }, []);
+
+  const handleValidationError = useCallback(() => {
+    setStatus("error");
+  }, []);
+
+  const statusIndicatorBackground: Record<
+    OutputPdfStatus,
+    string | undefined
+  > = {
+    success: undefined,
+    loading: "rgba(255,255,255,.5)",
+    error: "rgba(255,0,0,.2)",
   };
 
   return (
@@ -156,18 +177,20 @@ function App() {
               </Grid>
 
               <Grid item container>
-                <CoverForm onSubmit={generateCover} />
+                <CoverForm
+                  onSubmit={generateCover}
+                  onStartTyping={handleStartTyping}
+                  onValidationError={handleValidationError}
+                />
               </Grid>
             </Grid>
 
             <div className={classes.footerTextContainer}>
-              <Typography variant="subtitle1">
-                Hecho por Oscar Ramos
-              </Typography>
+              <Typography variant="subtitle1">Hecho por Oscar Ramos</Typography>
             </div>
           </Paper>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={6} className={classes.outputPdfContainer}>
           <iframe
             title="outputPdf"
             style={{
@@ -177,6 +200,10 @@ function App() {
               border: "none",
             }}
             src={(outputUrl as unknown) as string}
+          />
+          <div
+            className={classes.statusIndicator}
+            style={{ backgroundColor: statusIndicatorBackground[status] }}
           />
         </Grid>
       </Grid>
