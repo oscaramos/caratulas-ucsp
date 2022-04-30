@@ -181,6 +181,7 @@ function App() {
         </Grid>
       </Grid>
 
+      {/* @ts-ignore */}
       <GithubCorner
         href="https://github.com/oscaramos/caratulas-ucsp"
         size={80}
