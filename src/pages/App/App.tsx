@@ -27,7 +27,7 @@ function App() {
     data
   ) => {
     const doc = new JsPDF();
-    doc.addImage(LogoSanPabloImg, "JPEG", 120, 20, 70, 30);
+    doc.addImage(LogoSanPabloImg, "JPEG", 70, 20, 70, 30);
 
     const xcenter = 105;
     const xright = 190;
