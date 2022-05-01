@@ -74,7 +74,7 @@ export default function CoverForm({
         ...values,
         members: values.members.filter((member) => member.name.length > 0),
       });
-    }, 3000),
+    }, 2000),
     []
   );
 
