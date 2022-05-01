@@ -21,6 +21,7 @@ import { useStyles } from "./styles";
 type CoverData = {
   work: string;
   career: typeof careerOptions[number] | "";
+  teacher: string;
   course: string;
   semester: typeof semesterOptions[number] | "";
   year: string;
@@ -46,6 +47,7 @@ export default function CoverForm({
     defaultValues: {
       work: "",
       career: "",
+      teacher: "",
       course: "",
       semester: "",
       gender: "male",
@@ -197,6 +199,19 @@ export default function CoverForm({
           openOnFocus
           freeSolo
           ignoreControllerRenderValue
+        />
+      </Grid>
+      {/*----- Teacher -----*/}
+      <Grid item className={classes.itemContainer}>
+        <TextField
+          name="teacher"
+          variant="outlined"
+          label="Docente"
+          onChange={onChange}
+          error={!!errors.teacher}
+          helperText={errors?.teacher?.message}
+          inputRef={register}
+          fullWidth
         />
       </Grid>
       {/*----- Work -----*/}

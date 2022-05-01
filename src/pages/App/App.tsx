@@ -31,19 +31,29 @@ function App() {
 
     const xcenter = 105;
     const xright = 190;
+    let y = 80;
 
     doc.setFontSize(26);
-    doc.text(data.career, xcenter, 80, { align: "center" });
+    doc.text(data.career, xcenter, y, { align: "center" });
 
+    y += 10;
     doc.setFontSize(18);
-    doc.text(data.course, xcenter, 90, { align: "center" });
+    doc.text(data.course, xcenter, y, { align: "center" });
 
+    if (data.teacher) {
+      y += 10;
+      doc.setFontSize(17);
+      doc.text(`Docente ${data.teacher}`, xcenter, y, { align: "center" });
+    }
+
+    y += 10;
     doc.setFontSize(16);
-    doc.text(data.work, xcenter, 100, { align: "center" });
+    doc.text(data.work, xcenter, y, { align: "center" });
 
+    y += 20;
     doc.setFontSize(18);
     data.members.forEach((member, index) => {
-      doc.text(member.name, xright, 120 + index * 8, { align: "right" });
+      doc.text(member.name, xright, y + index * 8, { align: "right" });
     });
 
     doc.text(data.semester, xright, 200, { align: "right" });
