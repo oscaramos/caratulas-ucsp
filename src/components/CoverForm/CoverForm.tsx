@@ -1,3 +1,5 @@
+import DateFnsUtils from "@date-io/date-fns";
+import esLocale from "date-fns/locale/es";
 import { debounce } from "lodash";
 import React, { useCallback, useEffect } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
@@ -13,6 +15,10 @@ import {
   RadioGroup,
   TextField,
 } from "@material-ui/core";
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers";
 
 import { careerOptions, courses, semesterOptions } from "./autocompleteOptions";
 import ControlledAutocomplete from "./components/ControlledAutocomplete";
@@ -23,6 +29,7 @@ type CoverData = {
   career: typeof careerOptions[number] | "";
   teacher: string;
   course: string;
+  deliveryDate?: Date;
   semester: typeof semesterOptions[number] | "";
   year: string;
   gender: "male" | "female";
@@ -49,6 +56,7 @@ export default function CoverForm({
       career: "",
       teacher: "",
       course: "",
+      deliveryDate: new Date(),
       semester: "",
       gender: "male",
       year: `${new Date().getFullYear()}-${new Date().getMonth() >= 7 ? 2 : 1}`,
@@ -216,16 +224,48 @@ export default function CoverForm({
       </Grid>
       {/*----- Work -----*/}
       <Grid item className={classes.itemContainer}>
-        <TextField
-          name="work"
-          variant="outlined"
-          label="Nombre del trabajo"
-          onChange={onChange}
-          error={!!errors.work}
-          helperText={errors?.work?.message}
-          inputRef={register({ required: "Escriba el nombre de su trabajo" })}
-          fullWidth
-        />
+        <Grid container spacing={1} direction="row">
+          <Grid item className={classes.semesterInput}>
+            <TextField
+              name="work"
+              variant="outlined"
+              label="Nombre del trabajo"
+              onChange={onChange}
+              error={!!errors.work}
+              helperText={errors?.work?.message}
+              inputRef={register({
+                required: "Escriba el nombre de su trabajo",
+              })}
+              fullWidth
+            />
+          </Grid>
+          <Grid item className={classes.yearInput}>
+            <MuiPickersUtilsProvider locale={esLocale} utils={DateFnsUtils}>
+              <Controller
+                name="deliveryDate"
+                control={control}
+                render={({ onChange: onChangeToController, value }) => (
+                  <KeyboardDatePicker
+                    inputVariant="outlined"
+                    defaultChecked={false}
+                    id="delivery-date-dialog"
+                    label="Fecha de entrega"
+                    format="dd/MM/yyyy"
+                    invalidDateMessage="Fecha invalida"
+                    cancelLabel="Cancelar"
+                    openTo="date"
+                    value={value}
+                    clearable
+                    onChange={(...props) => {
+                      onChangeToController(...props);
+                      onChange();
+                    }}
+                  />
+                )}
+              />
+            </MuiPickersUtilsProvider>
+          </Grid>
+        </Grid>
       </Grid>
       {/*----- Semester and Year -----*/}
       <Grid item className={classes.itemContainer}>

@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import JsPDF from "jspdf";
 import React, { ComponentProps, useCallback, useEffect, useState } from "react";
 import ReactGA from "react-ga";
@@ -48,7 +49,22 @@ function App() {
 
     y += 10;
     doc.setFontSize(16);
-    doc.text(data.work, xcenter, y, { align: "center" });
+    doc.text(data.work, xcenter, y, {
+      align: "center",
+    });
+
+    if (data.deliveryDate) {
+      y += 10;
+      doc.setFontSize(16);
+      doc.text(
+        `Entregado el ${format(data.deliveryDate, "dd/MM/yyyy")}`,
+        xcenter,
+        y,
+        {
+          align: "center",
+        }
+      );
+    }
 
     y += 20;
     doc.setFontSize(18);
@@ -205,7 +221,7 @@ function App() {
             title="outputPdf"
             style={{
               width: "100%",
-              height: "100%",
+              height: "99%",
               zIndex: 2,
               border: "none",
             }}
